@@ -7,7 +7,57 @@
 
     <fragment
         android:id="@+id/onBoard"
-        android:name="io.github.junrdev.hiddengems.OnBoard"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.OnBoard"
         android:label="fragment_on_board"
-        tools:layout="@layout/fragment_on_board" />
+        tools:layout="@layout/fragment_on_board" >
+        <action
+            android:id="@+id/action_onBoard_to_signInSignUp"
+            app:destination="@id/signInSignUp" />
+        <action
+            android:id="@+id/action_onBoard_to_homeScreen"
+            app:destination="@id/homeScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInSignUp"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.SignInSignUp"
+        android:label="fragment_sign_in_sign_up"
+        tools:layout="@layout/fragment_sign_in_sign_up" >
+        <action
+            android:id="@+id/action_signInSignUp_to_homeScreen"
+            app:destination="@id/homeScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeScreen"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.HomeScreen"
+        android:label="fragment_home_screen"
+        tools:layout="@layout/fragment_home_screen" >
+        <action
+            android:id="@+id/action_homeScreen_to_searchResults"
+            app:destination="@id/searchResults" />
+        <action
+            android:id="@+id/action_homeScreen_to_viewGem"
+            app:destination="@id/viewGem" />
+        <action
+            android:id="@+id/action_homeScreen_to_addGem"
+            app:destination="@id/addGem" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchResults"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.SearchResults"
+        android:label="fragment_search_results"
+        tools:layout="@layout/fragment_search_results" >
+        <action
+            android:id="@+id/action_searchResults_to_viewGem"
+            app:destination="@id/viewGem" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewGem"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.ViewGem"
+        android:label="fragment_view_gem"
+        tools:layout="@layout/fragment_view_gem" />
+    <fragment
+        android:id="@+id/addGem"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.AddGem"
+        android:label="fragment_add_gem"
+        tools:layout="@layout/fragment_add_gem" />
 </navigation>
