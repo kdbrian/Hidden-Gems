@@ -7,6 +7,7 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-parcelize")
 
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -56,11 +57,49 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
-    implementation(libs.play.services.maps)
-    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //auth
+    implementation(libs.firebase.auth)
+
+    //firestore
+    implementation(libs.firebase.firestore)
+
+    //maps
+    implementation(libs.play.services.maps)
+
+    //nav
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+
+    //storage
+    implementation(libs.firebase.storage)
+    testImplementation(libs.junit)
+
+    //room
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
+    //circle image view
+    implementation(libs.circleimageview)
+
+    //glide
+    implementation(libs.glide)
+
+    //hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+    //shimmer
+    implementation(libs.shimmer)
+
+    //datastore
+    implementation(libs.androidx.datastore.preferences)
+    
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

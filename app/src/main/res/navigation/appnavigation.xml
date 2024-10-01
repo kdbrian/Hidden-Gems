@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appnavigation"
+    app:startDestination="@id/onBoard">
+
+    <fragment
+        android:id="@+id/onBoard"
+        android:name="io.github.junrdev.hiddengems.OnBoard"
+        android:label="fragment_on_board"
+        tools:layout="@layout/fragment_on_board" />
+</navigation>
