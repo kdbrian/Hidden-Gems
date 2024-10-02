@@ -33,6 +33,11 @@ class OnBoard : Fragment() {
                 findNavController().navigate(R.id.action_onBoard_to_signInSignUp)
             }
 
+            //add no account options
+            textView.setOnClickListener {
+                findNavController().navigate(R.id.action_onBoard_to_homeScreen)
+            }
+
 
         }
     }
