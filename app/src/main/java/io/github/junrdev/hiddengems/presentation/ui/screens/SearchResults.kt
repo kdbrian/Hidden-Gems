@@ -33,6 +33,11 @@ class SearchResults : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
         binding.apply {
+
+            arguments?.let { args ->
+                val query = args.getString("query")
+                println("Query $query")
+            }
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
             textView13.setOnClickListener {
