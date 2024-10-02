@@ -1,5 +1,6 @@
 package io.github.junrdev.hiddengems.presentation.di
 
+import android.app.Application
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,9 +11,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.junrdev.hiddengems.HiddenGemsApp
 import io.github.junrdev.hiddengems.data.repo.GemsRepo
+import io.github.junrdev.hiddengems.data.repo.ServingRepo
 import io.github.junrdev.hiddengems.data.repo.UsersRepo
 import io.github.junrdev.hiddengems.domain.repoimpl.GemsRepoImpl
+import io.github.junrdev.hiddengems.domain.repoimpl.ServingRepoImpl
 import io.github.junrdev.hiddengems.domain.repoimpl.UsersRepoImpl
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
 import javax.inject.Singleton
 
 @Module
@@ -23,9 +27,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesApplication(context: Context): HiddenGemsApp {
-        return context as HiddenGemsApp
-    }
+    fun providesContext(app:Application) =  app as Context
 
 
     @Provides
@@ -51,13 +53,28 @@ object AppModule {
     @Provides
     @Singleton
     fun providesGemsRepo(firestore: FirebaseFirestore, storage: FirebaseStorage): GemsRepo {
-        return GemsRepoImpl(firestore,storage)
+        return GemsRepoImpl(firestore, storage)
     }
 
     @Provides
     @Singleton
-    fun providesUserRepo(firebaseAuth: FirebaseAuth): UsersRepo {
-        return UsersRepoImpl(firebaseAuth)
+    fun providesUserRepo(
+        firebaseAuth: FirebaseAuth,
+        firebaseFirestore: FirebaseFirestore
+    ): UsersRepo {
+        return UsersRepoImpl(firebaseAuth, firebaseFirestore)
+    }
+
+    @Provides
+    @Singleton
+    fun providesServingsRepo(firestore: FirebaseFirestore): ServingRepo {
+        return ServingRepoImpl(firestore)
+    }
+
+    @Provides
+    @Singleton
+    fun providesAppDatastore(context: Context, firebaseAuth: FirebaseAuth): AppDatastore {
+        return AppDatastore(context, firebaseAuth)
     }
 
 }
