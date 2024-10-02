@@ -19,9 +19,8 @@ class GemsRepoImpl @Inject constructor(
 
     private val gems = firestore.collection("gems")
 
-    override suspend fun getGems(onResource: (Resource<List<Gem>>) -> Unit) {
+    override fun getGems(onResource: (Resource<List<Gem>>) -> Unit) {
         onResource(Resource.Loading())
-
         gems.get()
             .addOnSuccessListener {
                 val collected = it.toObjects(Gem::class.java)
@@ -31,7 +30,7 @@ class GemsRepoImpl @Inject constructor(
             }
     }
 
-    override suspend fun addGem(dto: GemDto, onResource: (Resource<Boolean>) -> Unit) {
+    override fun addGem(dto: GemDto, onResource: (Resource<Boolean>) -> Unit) {
         onResource(Resource.Loading())
 
         val gemRef = gems.document()
@@ -41,6 +40,7 @@ class GemsRepoImpl @Inject constructor(
         gemRef.set(toGem)
             .addOnSuccessListener {
                 if (dto.images.isNotEmpty()) {
+
                     // Upload images
                     saveImages(dto.images, toGem) { resource ->
                         when (resource) {
@@ -57,7 +57,8 @@ class GemsRepoImpl @Inject constructor(
                 onResource.invoke(Resource.Error(message = it.message.toString()))
             }
     }
-    override suspend fun searchForGem(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
+
+    override fun searchForGem(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
         onResource(Resource.Loading())
         gems.
             //filter offerings
