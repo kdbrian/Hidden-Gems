@@ -32,6 +32,23 @@
         android:textColor="@color/davysGrey"
         android:textColorHint="@color/davysGrey" />
 
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/roundbox"
+        android:drawableStart="@drawable/round_lock_24"
+        android:drawablePadding="12dp"
+        android:drawableTint="@color/aliceBlue"
+        android:ems="10"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:padding="24dp"
+        android:textColor="@color/davysGrey"
+        android:textColorHint="@color/davysGrey" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"

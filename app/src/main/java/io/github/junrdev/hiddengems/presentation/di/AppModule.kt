@@ -9,6 +9,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.junrdev.hiddengems.HiddenGemsApp
+import io.github.junrdev.hiddengems.data.repo.GemsRepo
+import io.github.junrdev.hiddengems.data.repo.UsersRepo
+import io.github.junrdev.hiddengems.domain.repoimpl.GemsRepoImpl
+import io.github.junrdev.hiddengems.domain.repoimpl.UsersRepoImpl
 import javax.inject.Singleton
 
 @Module
@@ -40,6 +44,20 @@ object AppModule {
     @Singleton
     fun providesFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
+    }
+
+
+    //repos
+    @Provides
+    @Singleton
+    fun providesGemsRepo(firestore: FirebaseFirestore, storage: FirebaseStorage): GemsRepo {
+        return GemsRepoImpl(firestore,storage)
+    }
+
+    @Provides
+    @Singleton
+    fun providesUserRepo(firebaseAuth: FirebaseAuth): UsersRepo {
+        return UsersRepoImpl(firebaseAuth)
     }
 
 }
