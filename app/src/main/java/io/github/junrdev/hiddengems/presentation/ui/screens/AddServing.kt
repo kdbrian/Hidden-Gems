@@ -75,8 +75,7 @@ class AddServing : BottomSheetDialogFragment() {
                     name = editTextText4.text.toString().ifEmpty { "unknown" }
                 )
 
-
-                setFragmentResult(Constant.serving, bundleOf(Constant.serving to serving))
+                setFragmentResult(Constant.serving, bundleOf(Constant.serving to updated))
                 dismiss()
             }
         }

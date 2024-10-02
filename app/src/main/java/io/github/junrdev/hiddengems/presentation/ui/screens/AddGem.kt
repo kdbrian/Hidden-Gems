@@ -13,11 +13,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
+import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentAddGemBinding
 import io.github.junrdev.hiddengems.presentation.adapter.AddGemImagesAdapter
+import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
+import io.github.junrdev.hiddengems.util.Constant
 
 @AndroidEntryPoint
 class AddGem : Fragment() {
@@ -25,7 +29,10 @@ class AddGem : Fragment() {
 
     lateinit var binding: FragmentAddGemBinding
     private val images = mutableListOf<Uri>()
-    lateinit var addedimagesadapter: AddGemImagesAdapter
+    private val servings = mutableListOf<Serving>()
+    private lateinit var addedimagesadapter: AddGemImagesAdapter
+    private lateinit var addedservingsadapter: ServingListAdapter
+
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -80,6 +87,10 @@ class AddGem : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar3)
         binding.apply {
+            addedimagesadapter = AddGemImagesAdapter(images)
+            addedservingsadapter = ServingListAdapter(servings)
+            addGemImagesList.adapter = addedimagesadapter
+            gemFeatures.adapter = addedservingsadapter
 
             toolbar3.setNavigationOnClickListener { findNavController().navigateUp() }
 
@@ -87,8 +98,18 @@ class AddGem : Fragment() {
                 checkPermissionAndPickImage()
             }
 
-            addedimagesadapter = AddGemImagesAdapter(images)
-            addGemImagesList.adapter = addedimagesadapter
+
+            setFragmentResultListener(Constant.serving) { _, bundle ->
+                val serving = bundle.getParcelable<Serving>(Constant.serving)
+                serving?.let { servings.add(it); addedservingsadapter.notifyItemInserted(servings.size) }
+                if (gemFeatures.visibility == View.GONE && servings.isNotEmpty()) {
+                    loadingFeaturesAdd.visibility = View.GONE
+                    gemFeatures.visibility = View.VISIBLE
+                } else if (gemFeatures.visibility == View.GONE && servings.isEmpty()) {
+                    loadingFeaturesAdd.visibility = View.VISIBLE
+                    gemFeatures.visibility = View.GONE
+                }
+            }
 
             textView21.setOnClickListener {
                 findNavController().navigate(R.id.action_addGem_to_addServing)
@@ -98,7 +119,7 @@ class AddGem : Fragment() {
 
 
     private fun checkPermissionAndPickImage() {
-        // Check if permission is granted (READ_EXTERNAL_STORAGE or WRITE_EXTERNAL_STORAGE depending on Android version)
+        // Check if permission is granted (READ_EXTERNAL_STORAGE or READ_MEDIA_IMAGES depending on Android version)
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES // For Android 13 (Tiramisu) and above
         } else {
