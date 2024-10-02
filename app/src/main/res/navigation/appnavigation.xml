@@ -59,5 +59,26 @@
         android:id="@+id/addGem"
         android:name="io.github.junrdev.hiddengems.presentation.ui.screens.AddGem"
         android:label="fragment_add_gem"
-        tools:layout="@layout/fragment_add_gem" />
+        tools:layout="@layout/fragment_add_gem" >
+        <action
+            android:id="@+id/action_addGem_to_addServing"
+            app:destination="@id/addServing" />
+        <action
+            android:id="@+id/action_addGem_to_loadingDialog"
+            app:destination="@id/loadingDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/addServing"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.AddServing"
+        android:label="fragment_add_serving"
+        tools:layout="@layout/fragment_add_serving" />
+    <dialog
+        android:id="@+id/loadingDialog"
+        android:name="io.github.junrdev.hiddengems.LoadingDialog"
+        android:label="fragment_loading_dialog"
+        tools:layout="@layout/fragment_loading_dialog" >
+        <action
+            android:id="@+id/action_loadingDialog_to_signInSignUp"
+            app:destination="@id/signInSignUp" />
+    </dialog>
 </navigation>
