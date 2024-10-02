@@ -15,7 +15,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentAddGemBinding
+import io.github.junrdev.hiddengems.presentation.adapter.AddGemImagesAdapter
 
 @AndroidEntryPoint
 class AddGem : Fragment() {
@@ -23,6 +25,7 @@ class AddGem : Fragment() {
 
     lateinit var binding: FragmentAddGemBinding
     private val images = mutableListOf<Uri>()
+    lateinit var addedimagesadapter: AddGemImagesAdapter
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -44,7 +47,24 @@ class AddGem : Fragment() {
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            images.add(it)
+            if (images.size == 4) {
+                Toast.makeText(requireContext(), "Image limit reached", Toast.LENGTH_SHORT).show()
+            } else {
+                images.add(it)
+                addedimagesadapter.notifyItemInserted(images.size)
+            }
+
+            //toggle visibility
+            binding.apply {
+                if (addGemImagesList.visibility == View.GONE && images.isNotEmpty()) {
+                    loadingAddPlaceImages.apply { stopShimmer(); visibility = View.GONE }
+                    addGemImagesList.visibility = View.VISIBLE
+                } else if (images.isEmpty() && addGemImagesList.visibility == View.VISIBLE) {
+                    addGemImagesList.visibility = View.GONE
+                    loadingAddPlaceImages.apply { startShimmer(); visibility = View.VISIBLE }
+                }
+            }
+
         }
     }
 
@@ -60,13 +80,24 @@ class AddGem : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar3)
         binding.apply {
+
             toolbar3.setNavigationOnClickListener { findNavController().navigateUp() }
 
+            textView23.setOnClickListener {
+                checkPermissionAndPickImage()
+            }
+
+            addedimagesadapter = AddGemImagesAdapter(images)
+            addGemImagesList.adapter = addedimagesadapter
+
+            textView21.setOnClickListener {
+                findNavController().navigate(R.id.action_addGem_to_addServing)
+            }
         }
     }
 
 
-    fun checkPermissionAndPickImage() {
+    private fun checkPermissionAndPickImage() {
         // Check if permission is granted (READ_EXTERNAL_STORAGE or WRITE_EXTERNAL_STORAGE depending on Android version)
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES // For Android 13 (Tiramisu) and above
