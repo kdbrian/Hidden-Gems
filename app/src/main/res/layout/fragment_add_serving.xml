@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/richBlack"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".presentation.ui.screens.AddServing">
+
+    <TextView
+        android:id="@+id/textView26"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Serving details"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fill in below to continue"
+        android:textColor="@color/davysGrey" />
+
+    <EditText
+        android:id="@+id/editTextText4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/roundbox"
+        android:ems="10"
+        android:hint="smocha"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textColor="@color/davysGrey"
+        android:textColorHint="@color/davysGrey" />
+
+    <TextView
+        android:id="@+id/textView28"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Pricing"
+        android:textSize="18sp" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        app:singleSelection="true">
+
+        <Button
+            android:id="@+id/button5"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Actual price"
+            android:textColor="@color/aliceBlue" />
+
+        <Button
+            android:id="@+id/button6"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Price Range"
+            android:textColor="@color/aliceBlue" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp">
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/priceRange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:valueFrom="10.0"
+            app:labelBehavior="withinBounds"
+            android:valueTo="500"
+            app:thumbColor="@color/davysGrey"
+            app:thumbElevation="8dp"
+            android:visibility="gone"
+            android:stepSize="5.0"
+            app:trackColorActive="@color/chillRed"
+            app:trackColorInactive="@color/davysGrey"
+            app:values="@array/priceRangeInitials" />
+
+        <EditText
+            android:id="@+id/editTextNumberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/roundbox"
+            android:ems="10"
+            android:hint="input price"
+            android:inputType="numberDecimal"
+            android:padding="16dp"
+            android:textColor="@color/davysGrey"
+            android:textColorHint="@color/davysGrey"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/chillRed"
+        android:text="Save"
+        app:cornerRadius="12dp" />
+
+</LinearLayout>
