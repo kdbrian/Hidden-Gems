@@ -23,51 +23,6 @@
         app:title="Title"
         app:titleTextColor="@color/aliceBlue" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/loadingPlaceFeatures"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/featureitem" />
-
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
