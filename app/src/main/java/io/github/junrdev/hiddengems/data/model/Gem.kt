@@ -2,13 +2,16 @@ package io.github.junrdev.hiddengems.data.model
 
 import android.net.Uri
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
 @Parcelize
+@Entity
 data class Gem(
-    var gemId: String?,
+    @PrimaryKey var gemId: String = "",
     val placeName: String,
     val latLng: LatLng? = null,
     val offerings: List<String> = emptyList(),
@@ -31,7 +34,7 @@ data class GemDto(
 
     companion object{
         fun GemDto.toGem() = Gem(
-            gemId = gemId,
+            gemId = gemId.orEmpty(),
             placeName = placeName,
             latLng = latLng,
             offerings = offerings
