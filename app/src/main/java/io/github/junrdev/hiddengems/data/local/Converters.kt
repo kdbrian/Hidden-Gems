@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.github.junrdev.hiddengems.data.model.Review
+import io.github.junrdev.hiddengems.data.model.Serving
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -45,6 +46,15 @@ class Converters {
 
     @TypeConverter
     fun reviewListToString(list: List<Review>?): String {
+        return gson.toJson(list)
+    }
+    @TypeConverter
+    fun fromServingList(value: String?): List<Serving> {
+        return if (value == null) emptyList() else gson.fromJson(value, object : TypeToken<List<Serving>>() {}.type)
+    }
+
+    @TypeConverter
+    fun servingListToString(list: List<Serving>?): String {
         return gson.toJson(list)
     }
 

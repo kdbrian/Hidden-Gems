@@ -8,12 +8,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentAddServingBinding
 import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
 import io.github.junrdev.hiddengems.util.Constant
+import io.github.junrdev.hiddengems.util.Resource
 
 @AndroidEntryPoint
 class AddServing : BottomSheetDialogFragment() {
@@ -70,17 +72,53 @@ class AddServing : BottomSheetDialogFragment() {
 
             button3.setOnClickListener {
 
-                var updated = serving.copy(
+                val updated = serving.copy(
                     priceFrom = if (priceranges.isNotEmpty()) priceranges[0].toDouble() else 0.0,
                     priceTo = if (priceranges.isNotEmpty()) priceranges[1].toDouble() else 0.0,
                     price = if (editTextNumberDecimal.text.isNotEmpty()) editTextNumberDecimal.text.toString()
                         .trim().toDouble() else 0.0,
                     name = editTextText4.text.toString().ifEmpty { "unknown" }
                 )
-                servingsViewModel.addServing(updated)
-                setFragmentResult(Constant.serving, bundleOf(Constant.serving to updated))
-                dismiss()
+                servingsViewModel.addServing(updated) { addedResource ->
+                    when (addedResource) {
+                        is Resource.Error -> {
+                            Snackbar.make(
+                                requireView(),
+                                "Failed to add due to ${addedResource.message}.",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        is Resource.Loading -> {
+                            Snackbar.make(
+                                requireView(),
+                                "saving please wait",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        is Resource.Success -> {
+                            this@AddServing.setFragmentResult(
+                                Constant.serving,
+                                bundleOf(Constant.serving to updated.copy(id = addedResource.data))
+                            )
+                            dismiss()
+
+                        }
+                    }
+                }
             }
+        }
+    }
+
+
+    companion object {
+        fun newInstance(): AddServing {
+            val args = Bundle()
+                .apply { }
+            val fragment = AddServing()
+            fragment.arguments = args
+            return fragment
         }
     }
 }

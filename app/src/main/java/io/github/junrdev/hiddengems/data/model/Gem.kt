@@ -13,10 +13,12 @@ import java.time.LocalDateTime
 data class Gem(
     @PrimaryKey var gemId: String = "",
     val placeName: String= "",
+    val locationName: String?= null,
     val latLng: LatLng? = null,
     val offerings: List<String> = emptyList(),
     val images: List<String> = emptyList(),
     val reviews: List<Review> = emptyList(),
+    val servings: List<Serving> = emptyList(),
     val topics: List<String> = emptyList(),
     val categories: List<String> = emptyList(),
     val addedBy : String?=null,
