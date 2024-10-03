@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.github.junrdev.hiddengems.HiddenGemsApp
+import io.github.junrdev.hiddengems.data.local.HiddenGemDb
 import io.github.junrdev.hiddengems.data.repo.GemsRepo
 import io.github.junrdev.hiddengems.data.repo.ServingRepo
 import io.github.junrdev.hiddengems.data.repo.UsersRepo
@@ -27,8 +27,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesContext(app:Application) =  app as Context
+    fun providesContext(app: Application) = app as Context
 
+
+    //app db
+    @Provides
+    @Singleton
+    fun providesAppDb(context: Context): HiddenGemDb {
+        return HiddenGemDb.getDb(context)
+    }
 
     @Provides
     @Singleton

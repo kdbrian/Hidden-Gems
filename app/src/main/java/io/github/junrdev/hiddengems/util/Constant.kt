@@ -5,5 +5,6 @@ object Constant {
     const val usercollection = "usercollection"
     const val gemsimagesdir = "gemsimages"
     const val serving = "serving"
+    const val gem = "gem"
     const val servingcollection = "servings"
 }

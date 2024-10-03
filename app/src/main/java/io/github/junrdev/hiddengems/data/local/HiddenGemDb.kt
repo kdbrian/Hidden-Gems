@@ -19,15 +19,17 @@ const val dbname = "hiddengemdb"
 @TypeConverters(Converters::class)
 abstract class HiddenGemDb : RoomDatabase() {
 
-    @Volatile
-    private var db: HiddenGemDb? = null
-
-    fun getDb(context: Context) = db ?: synchronized(this) {
-        db = buildDatabase(context)
-        db!!
-    }
 
     companion object{
+
+        @Volatile
+        private var db: HiddenGemDb? = null
+
+        fun getDb(context: Context) = db ?: synchronized(this) {
+            db = buildDatabase(context)
+            db!!
+        }
+
         private val MIG1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.beginTransaction()
