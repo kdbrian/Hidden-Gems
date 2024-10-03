@@ -11,10 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
+import io.github.junrdev.hiddengems.data.model.Gem
 import io.github.junrdev.hiddengems.databinding.FragmentViewGemBinding
+import io.github.junrdev.hiddengems.util.Constant
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ViewGem : Fragment() {
+
+    lateinit var gem: Gem
     lateinit var binding: FragmentViewGemBinding
 
     override fun onCreateView(
@@ -32,11 +39,24 @@ class ViewGem : Fragment() {
 
         binding.apply {
 
-            toolbar2.setNavigationOnClickListener { findNavController().navigateUp() }
+            gem = arguments?.getParcelable(Constant.gem) ?: Gem()
+
+            toolbar2.apply {
+                title = gem.placeName
+//                subtitle = gem.l
+                setNavigationOnClickListener { findNavController().navigateUp() }
+            }
 
             loadingReviews.apply { startShimmer() }
             loadingPlaceImages.apply { startShimmer() }
             loadingPlaceFeatures.apply { startShimmer() }
+
+            CoroutineScope(Dispatchers.Main).launch {
+
+                loadingReviews.apply { startShimmer() }
+                loadingPlaceImages.apply { startShimmer() }
+                loadingPlaceFeatures.apply { startShimmer() }
+            }
         }
     }
 

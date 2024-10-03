@@ -7,16 +7,30 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentSearchResultsBinding
+import io.github.junrdev.hiddengems.presentation.adapter.PlaceListAdapter
+import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
+import io.github.junrdev.hiddengems.presentation.ui.showToast
+import io.github.junrdev.hiddengems.presentation.viewmodel.GemsViewModel
+import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
+import io.github.junrdev.hiddengems.util.Constant
+import io.github.junrdev.hiddengems.util.Resource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchResults : Fragment() {
-    lateinit var binding: FragmentSearchResultsBinding
 
+    lateinit var binding: FragmentSearchResultsBinding
+    private val gemsViewModel by viewModels<GemsViewModel>()
+    private val servingsViewModel by viewModels<ServingsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +49,51 @@ class SearchResults : Fragment() {
         binding.apply {
 
             arguments?.let { args ->
-                val query = args.getString("query")
-                println("Query $query")
+                val name = args.getString("name")
+                val serving = args.getString("serving")
+
+                name?.let {
+                    gemsViewModel.searchGemsByName(it)
+                }
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    gemsViewModel.searchedgems.observe(viewLifecycleOwner) { searchResultsResource ->
+
+                        when (searchResultsResource) {
+                            is Resource.Error -> {
+                                loadingSearchResults.stopShimmer()
+                                requireContext().showToast("Failed due to ${searchResultsResource.message}")
+                            }
+
+                            is Resource.Loading -> {
+                                loadingSearchResults.apply {
+                                    startShimmer()
+                                    visibility = View.VISIBLE
+                                }
+                                searchResults.visibility = View.GONE
+                            }
+
+                            is Resource.Success -> {
+                                loadingSearchResults.stopShimmer()
+                                searchResultsResource.data?.let { gemList ->
+                                    if (gemList.isNotEmpty()){
+                                        loadingSearchResults.visibility = View.GONE
+                                        searchResults.visibility = View.VISIBLE
+                                        searchResults.adapter =
+                                            PlaceListAdapter(requireContext(), gemList) {
+                                                findNavController().navigate(
+                                                    R.id.action_homeScreen_to_viewGem,
+                                                    bundleOf(Constant.gem to it)
+                                                )
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
             }
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 

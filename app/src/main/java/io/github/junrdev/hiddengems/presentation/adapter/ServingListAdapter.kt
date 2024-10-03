@@ -9,13 +9,17 @@ import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Serving
 
 class ServingListAdapter(
-    val servings: MutableList<Serving>
+    val servings: MutableList<Serving>,
+    val onclick: ((serving: Serving) -> Unit)? = null
 ) : RecyclerView.Adapter<ServingListAdapter.VH>() {
 
     inner class VH(val view: View) : RecyclerView.ViewHolder(view) {
         fun bindItem(x: Serving) {
             view.apply {
                 findViewById<TextView>(R.id.textView7).text = x.name
+                setOnClickListener {
+                    onclick?.invoke(x)
+                }
             }
         }
     }

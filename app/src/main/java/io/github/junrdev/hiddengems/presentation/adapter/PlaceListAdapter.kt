@@ -25,11 +25,11 @@ class PlaceListAdapter(
 
                     Glide.with(context)
                         .load(x.images.first())
-                        .centerCrop()
+                        .placeholder(R.drawable.logo_transparent_png)
                         .into(imageView7)
 
                 textView6.text = "reviews ${x.reviews.size}"
-
+                view.setOnClickListener { onclick(x) }
             }
         }
     }

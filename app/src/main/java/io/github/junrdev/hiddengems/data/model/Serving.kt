@@ -5,9 +5,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Serving(
-    val id: String?,
-    val price: Double?,
-    val priceFrom: Double?,
-    val priceTo: Double?,
-    val name: String?
+    val id: String? = null,
+    val price: Double? = 0.0,
+    val priceFrom: Double? = 0.0,
+    val priceTo: Double? = 0.0,
+    val name: String? = null
 ) : Parcelable

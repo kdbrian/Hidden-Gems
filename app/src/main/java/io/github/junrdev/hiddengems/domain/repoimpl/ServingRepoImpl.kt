@@ -22,12 +22,12 @@ class ServingRepoImpl(
             }
     }
 
-    override fun saveServing(serving: Serving, onResource: (Resource<Any>) -> Unit) {
+    override fun saveServing(serving: Serving, onResource: (Resource<String>) -> Unit) {
         val servingRef = servings.document()
         val withId = serving.copy(id = servingRef.id)
         servingRef.set(withId)
             .addOnSuccessListener {
-                onResource(Resource.Success(data = true))
+                onResource(Resource.Success(data = servingRef.id))
             }.addOnFailureListener {
                 onResource(Resource.Error(message = it.message.toString()))
             }

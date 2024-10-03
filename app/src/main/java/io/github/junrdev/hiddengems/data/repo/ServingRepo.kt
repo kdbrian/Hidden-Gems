@@ -5,5 +5,5 @@ import io.github.junrdev.hiddengems.util.Resource
 
 interface ServingRepo {
     fun getServings(onResource: (Resource<List<Serving>>) -> Unit)
-    fun saveServing(serving: Serving,onResource:( Resource<Any>)->Unit)
+    fun saveServing(serving: Serving,onResource:( Resource<String>)->Unit)
 }
