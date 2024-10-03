@@ -18,6 +18,7 @@ import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,42 +50,86 @@ class SignInSignUp : Fragment() {
 
                 if (checkFields()) {
 
-
-                    val dialog = LoadingDialog.newInstance("Please wait")
-
-                    usersViewModel.signUpUser(
-                        AccountDto(
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val dialog = LoadingDialog.newInstance("Please wait")
+                        val accountDto = AccountDto(
                             email = editTextTextEmailAddress.text.toString(),
                             password = editTextTextPassword.text.toString()
                         )
-                    ) { createAccountResource ->
-                        when (createAccountResource) {
 
-                            is Resource.Error -> {
-                                dialog.dismiss()
-                                requireContext().showToast(createAccountResource.message.toString())
-                            }
+                        //if its not first time -> (login) otherwise (signup)
 
-                            is Resource.Loading -> {
-                                requireContext().showToast("Please wait.")
-                                dialog
-                                    .show(parentFragmentManager, null)
-                            }
+                        if (!checkBox.isChecked) {
+                            println("log")
 
-                            is Resource.Success -> {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    dialog.dismiss()
-                                    appDatastore.loginUser()
-                                    findNavController().navigate(R.id.action_signInSignUp_to_homeScreen)
-                                    findNavController().popBackStack(
-                                        R.id.action_signInSignUp_to_homeScreen,
-                                        true
-                                    )
+                            usersViewModel.loginUser(accountDto) { userResource ->
+
+                                println("res ${userResource.data}")
+
+                                when (userResource) {
+
+                                    is Resource.Error -> {
+                                        dialog.dismiss()
+                                        requireContext().showToast(userResource.message.toString())
+                                    }
+
+                                    is Resource.Loading -> {
+                                        requireContext().showToast("Please wait.")
+                                        dialog
+                                            .show(parentFragmentManager, null)
+                                    }
+
+                                    is Resource.Success -> {
+                                        CoroutineScope(Dispatchers.Main).launch {
+                                            dialog.dismiss()
+                                            appDatastore.loginUser()
+                                            findNavController().navigate(R.id.action_signInSignUp_to_homeScreen)
+                                            findNavController().popBackStack(
+                                                R.id.action_signInSignUp_to_homeScreen,
+                                                true
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
 
+                        } else {
+                            println("sign")
+                            usersViewModel.signUpUser(
+                                accountDto
+                            ) { createAccountResource ->
+                                when (createAccountResource) {
+
+                                    is Resource.Error -> {
+                                        dialog.dismiss()
+                                        requireContext().showToast(createAccountResource.message?:"Failed retry again.")
+                                    }
+
+                                    is Resource.Loading -> {
+                                        requireContext().showToast("Please wait.")
+                                        dialog
+                                            .show(parentFragmentManager, null)
+                                    }
+
+                                    is Resource.Success -> {
+                                        CoroutineScope(Dispatchers.Main).launch {
+                                            dialog.dismiss()
+                                            appDatastore.loginUser()
+                                            appDatastore.saveFirstTime()
+                                            findNavController().navigate(R.id.action_signInSignUp_to_homeScreen)
+                                            findNavController().popBackStack(
+                                                R.id.action_signInSignUp_to_homeScreen,
+                                                true
+                                            )
+                                        }
+                                    }
+                                }
+
+                            }
+
+                        }
                     }
+
                 }
             }
 

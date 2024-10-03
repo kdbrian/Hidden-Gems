@@ -9,11 +9,22 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentOnBoardBinding
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class OnBoard : Fragment() {
+
+
     lateinit var binding: FragmentOnBoardBinding
+
+    @Inject
+    lateinit var appDatastore: AppDatastore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +47,13 @@ class OnBoard : Fragment() {
             //add no account options
             textView.setOnClickListener {
                 findNavController().navigate(R.id.action_onBoard_to_homeScreen)
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                //check if logged in
+                if (appDatastore.isLoggedIn.first()) {
+                    findNavController().navigate(R.id.action_onBoard_to_homeScreen)
+                }
             }
 
 

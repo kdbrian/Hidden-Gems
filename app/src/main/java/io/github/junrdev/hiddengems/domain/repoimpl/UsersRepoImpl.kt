@@ -1,5 +1,6 @@
 package io.github.junrdev.hiddengems.domain.repoimpl
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,6 +11,8 @@ import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
 import javax.inject.Inject
 
+private const val TAG = "UsersRepoImpl"
+
 class UsersRepoImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore
@@ -19,6 +22,7 @@ class UsersRepoImpl @Inject constructor(
         onResource(Resource.Loading())
         firebaseAuth.createUserWithEmailAndPassword(dto.email, dto.password)
             .addOnSuccessListener { authResult ->
+                println("result ${authResult.user}")
                 authResult.user?.let { firebaseUser ->
                     firestore.collection(Constant.usercollection)
                         .add(UserAccount(uid = firebaseUser.uid, email = firebaseUser.email!!))
@@ -26,7 +30,10 @@ class UsersRepoImpl @Inject constructor(
                         .addOnFailureListener { onResource(Resource.Error(message = it.message.toString())) }
                 }
             }
-            .addOnFailureListener { onResource(Resource.Error(message = it.localizedMessage.toString())) }
+            .addOnFailureListener {
+                Log.d(TAG, "signUp: ${it.message.toString()}")
+                onResource(Resource.Error(message = it.localizedMessage.toString()))
+            }
     }
 
     override fun login(dto: AccountDto, onResource: (Resource<FirebaseUser>) -> Unit) {
