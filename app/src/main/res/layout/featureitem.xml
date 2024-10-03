@@ -3,9 +3,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/roundbox"
-    android:paddingHorizontal="16dp"
+    android:paddingHorizontal="12dp"
     android:layout_margin="5dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="16dp">
 
     <TextView
         android:id="@+id/textView7"
