@@ -36,12 +36,33 @@ class GemsViewModel @Inject constructor(
         }
     }
 
-    fun searchGems(query: String) {
-        gemsRepo.searchForGem(query) { listResource -> _searchedgems.postValue(listResource) }
+    fun searchGemsByName(query: String) {
+        gemsRepo.searchForGemByName(query) { listResource -> _searchedgems.postValue(listResource) }
+    }
+
+    fun searchGemsByLocation(query: String) {
+        gemsRepo.searchForGemByLocation(query) { listResource ->
+            _searchedgems.postValue(
+                listResource
+            )
+        }
+    }
+
+    fun searchGemsByServing(query: String) {
+        val gemsMap = _gems.value?.data?.filter { gem ->
+            gem.servings.any { serving ->
+                serving.name == query
+            }
+        }
+
+
+        _searchedgems.postValue(
+            Resource.Success(data = gemsMap ?: emptyList() )
+        )
     }
 
     fun addGem(gemDto: GemDto, onResource: (Resource<Boolean>) -> Unit) {
-        gemsRepo.addGem(dto = gemDto) { onResource(it) }
+        gemsRepo.addGem(dto = gemDto) { onResource(it); getGems() }
     }
 
 }

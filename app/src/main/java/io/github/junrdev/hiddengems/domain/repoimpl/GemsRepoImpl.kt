@@ -1,6 +1,7 @@
 package io.github.junrdev.hiddengems.domain.repoimpl
 
 import android.net.Uri
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
@@ -58,12 +59,26 @@ class GemsRepoImpl @Inject constructor(
             }
     }
 
-    override fun searchForGem(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
+    override fun searchForGemByName(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
         onResource(Resource.Loading())
         gems.
             //filter offerings
-        whereArrayContains("offerings", query)
+        whereEqualTo("placeName", query)
             //proceed with topics
+            .get()
+            .addOnSuccessListener {
+                val items = it.toObjects(Gem::class.java)
+                Resource.Success(data = items)
+            }.addOnFailureListener {
+                onResource.invoke(Resource.Error(message = it.message.toString()))
+            }
+    }
+
+    override fun searchForGemByLocation(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
+        onResource(Resource.Loading())
+        gems.
+            //filter offerings
+            whereEqualTo("locationName", query)
             .get()
             .addOnSuccessListener {
                 val items = it.toObjects(Gem::class.java)
