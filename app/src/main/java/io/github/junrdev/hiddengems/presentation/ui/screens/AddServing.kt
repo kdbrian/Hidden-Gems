@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentAddServingBinding
+import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
 import io.github.junrdev.hiddengems.util.Constant
 
 @AndroidEntryPoint
@@ -20,6 +22,7 @@ class AddServing : BottomSheetDialogFragment() {
     lateinit var binding: FragmentAddServingBinding
     private var priceranges = listOf<Float>()
     private var serving = Serving(null, null, null, null, null)
+    private val servingsViewModel by viewModels<ServingsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,7 +77,7 @@ class AddServing : BottomSheetDialogFragment() {
                         .trim().toDouble() else 0.0,
                     name = editTextText4.text.toString().ifEmpty { "unknown" }
                 )
-
+                servingsViewModel.addServing(updated)
                 setFragmentResult(Constant.serving, bundleOf(Constant.serving to updated))
                 dismiss()
             }
