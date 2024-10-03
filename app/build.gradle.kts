@@ -61,6 +61,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //auth
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
 
     //firestore
@@ -96,7 +97,15 @@ dependencies {
 
     //datastore
     implementation(libs.androidx.datastore.preferences)
-    
+
+
+    //gson
+    implementation(libs.gson)
+
+    //okhttp
+    implementation(libs.okhttp)
+
+
 }
 
 // Allow references to generated code
