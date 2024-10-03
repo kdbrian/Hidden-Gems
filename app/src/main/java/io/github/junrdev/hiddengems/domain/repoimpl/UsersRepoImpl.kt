@@ -25,7 +25,8 @@ class UsersRepoImpl @Inject constructor(
                 println("result ${authResult.user}")
                 authResult.user?.let { firebaseUser ->
                     firestore.collection(Constant.usercollection)
-                        .add(UserAccount(uid = firebaseUser.uid, email = firebaseUser.email!!))
+                        .document(firebaseUser.uid)
+                        .set(UserAccount(uid = firebaseUser.uid, email = firebaseUser.email!!))
                         .addOnSuccessListener { onResource(Resource.Success(data = firebaseUser)) }
                         .addOnFailureListener { onResource(Resource.Error(message = it.message.toString())) }
                 }

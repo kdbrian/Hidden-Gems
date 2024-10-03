@@ -12,13 +12,14 @@ import java.time.LocalDateTime
 @Entity
 data class Gem(
     @PrimaryKey var gemId: String = "",
-    val placeName: String,
+    val placeName: String= "",
     val latLng: LatLng? = null,
     val offerings: List<String> = emptyList(),
     val images: List<String> = emptyList(),
     val reviews: List<Review> = emptyList(),
     val topics: List<String> = emptyList(),
     val categories: List<String> = emptyList(),
+    val addedBy : String?=null,
     val dateAdded: String = LocalDateTime.now().toString()
 ) : Parcelable
 
@@ -30,6 +31,7 @@ data class GemDto(
     val latLng: LatLng? = null,
     val offerings: List<String> = emptyList(),
     val images: List<Uri> = emptyList(),
+    val addedBy : String?=null,
 ) : Parcelable {
 
     companion object{
@@ -37,7 +39,8 @@ data class GemDto(
             gemId = gemId.orEmpty(),
             placeName = placeName,
             latLng = latLng,
-            offerings = offerings
+            offerings = offerings,
+            addedBy = addedBy
         )
     }
 
