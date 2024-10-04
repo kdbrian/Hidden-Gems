@@ -93,11 +93,11 @@ class GemsRepoImpl @Inject constructor(
         gem: Gem,
         onResource: (Resource<Boolean>) -> Unit
     ) {
-        val imgsref = firebaseStorage.reference.child("${Constant.gemsimagesdir}")
+        val imgsref = firebaseStorage.reference.child(Constant.gemsimagesdir)
         val downloadUrls = mutableListOf<String>()
 
         images.forEachIndexed { index, uri ->
-            val ref = imgsref.child("${gem}_$index.jpg")
+            val ref = imgsref.child("${gem.gemId}_$index.jpg")
             ref.putFile(uri).addOnSuccessListener {
 
                 ref.downloadUrl.addOnSuccessListener {

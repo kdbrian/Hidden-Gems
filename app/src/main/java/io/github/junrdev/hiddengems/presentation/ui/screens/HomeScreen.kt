@@ -111,7 +111,7 @@ class HomeScreen : Fragment() {
                                 servings.adapter = ServingListAdapter(servingList.toMutableList()){
                                     findNavController().navigate(
                                         R.id.action_homeScreen_to_searchResults,
-                                        bundleOf("name" to it.name.toString())
+                                        bundleOf(Constant.serving to it.name.toString())
                                     )
                                 }
                                 servings.visibility = View.VISIBLE

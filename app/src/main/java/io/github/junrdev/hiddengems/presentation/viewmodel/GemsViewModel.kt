@@ -49,16 +49,20 @@ class GemsViewModel @Inject constructor(
     }
 
     fun searchGemsByServing(query: String) {
-        val gemsMap = _gems.value?.data?.filter { gem ->
-            gem.servings.any { serving ->
-                serving.name == query
-            }
+        viewModelScope.launch {
+            getGems()
+            val gemsMap = _gems.value?.data?.filter { gem ->
+                gem.servings.any { serving ->
+                    serving.name == query
+                }
+            } ?: emptyList()
+            println("list ${_gems.value?.data}")
+            println("list $gemsMap")
+            _searchedgems.postValue(
+                Resource.Success(data = gemsMap)
+            )
         }
 
-
-        _searchedgems.postValue(
-            Resource.Success(data = gemsMap ?: emptyList() )
-        )
     }
 
     fun addGem(gemDto: GemDto, onResource: (Resource<Boolean>) -> Unit) {
