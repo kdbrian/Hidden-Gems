@@ -18,7 +18,6 @@
         android:theme="?attr/actionBarTheme"
         app:menu="@menu/filtermenu"
         app:navigationIcon="@drawable/round_arrow_back_24"
-        app:subtitle="some title"
         app:subtitleTextColor="@color/davysGrey"
         app:title="Title"
         app:titleTextColor="@color/aliceBlue" />

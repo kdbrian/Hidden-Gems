@@ -53,8 +53,17 @@ class SearchResults : Fragment() {
                 val serving = args.getString("serving")
 
                 name?.let {
+                    println("name $it")
+                    toolbar.title = it
                     gemsViewModel.searchGemsByName(it)
                 }
+
+                serving?.let {
+                    println("serving $it")
+                    gemsViewModel.searchGemsByServing(it)
+                    toolbar.title = it
+                }
+
 
                 CoroutineScope(Dispatchers.Main).launch {
                     gemsViewModel.searchedgems.observe(viewLifecycleOwner) { searchResultsResource ->
@@ -77,6 +86,7 @@ class SearchResults : Fragment() {
                                 loadingSearchResults.stopShimmer()
                                 searchResultsResource.data?.let { gemList ->
                                     if (gemList.isNotEmpty()){
+                                        textView13.text = "${gemList.size}"
                                         loadingSearchResults.visibility = View.GONE
                                         searchResults.visibility = View.VISIBLE
                                         searchResults.adapter =
