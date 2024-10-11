@@ -3,5 +3,12 @@
     <style name="Base.Theme.HiddenGems" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="backgroundColor">@color/richBlack</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:textColor">@color/aliceBlue</item>
+        <item name="fontFamily">@font/questrialregular</item>
+
     </style>
 </resources>
