@@ -52,6 +52,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="10dp"
+                    android:text='@{gem.locationName}'
                     android:background="@drawable/roundbox"
                     android:backgroundTint="@color/davysGrey"
                     android:drawableStart="@drawable/baseline_location_pin_24"
