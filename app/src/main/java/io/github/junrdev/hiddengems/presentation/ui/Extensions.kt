@@ -1,11 +1,10 @@
 package io.github.junrdev.hiddengems.presentation.ui
 
 import android.content.Context
+import android.location.Address
 import android.location.Geocoder
-import android.widget.TextView
 import android.widget.Toast
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.github.junrdev.hiddengems.R
+import com.google.android.gms.maps.model.LatLng
 import java.util.Locale
 
 fun Context.showToast(message: String) {
@@ -13,15 +12,22 @@ fun Context.showToast(message: String) {
 }
 
 
-fun Context.getLocationName(latitude: Double, longitude: Double): String? {
-    val geocoder = Geocoder(this, Locale.getDefault())
-    val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+fun LatLng.getAdress(context: Context): String {
+    val geocoder = Geocoder(context, Locale.getDefault())
+    val addresses: List<Address>?
+    val address: Address?
+    var addressText = ""
 
-    return if (!addresses.isNullOrEmpty()) {
-        addresses[0].getAddressLine(0) // Returns full address
-    } else {
-        null // No address found
+    try {
+        addresses = geocoder.getFromLocation(latitude, longitude, 1)
+        if (addresses != null && addresses.isNotEmpty()) {
+            address = addresses[0]
+            addressText = address.getAddressLine(0) // Get the first address line
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
+    return addressText
 }
 
 
