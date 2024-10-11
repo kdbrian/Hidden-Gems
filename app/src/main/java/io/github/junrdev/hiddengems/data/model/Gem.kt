@@ -30,8 +30,10 @@ data class Gem(
 data class GemDto(
     var gemId: String?,
     val placeName: String,
+    val locationName: String?= null,
     val latLng: LatLng? = null,
     val offerings: List<String> = emptyList(),
+    val servings: List<Serving> = emptyList(),
     val images: List<Uri> = emptyList(),
     val addedBy : String?=null,
 ) : Parcelable {
@@ -42,7 +44,9 @@ data class GemDto(
             placeName = placeName,
             latLng = latLng,
             offerings = offerings,
-            addedBy = addedBy
+            addedBy = addedBy,
+            servings = servings,
+            locationName = locationName
         )
     }
 

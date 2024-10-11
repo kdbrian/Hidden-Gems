@@ -13,6 +13,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="14dp"
+            android:orientation="horizontal"
+            android:overScrollMode="ifContentScrolls"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/someQuote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/richBlack"
+                android:elevation="14dp"
+                android:text="Hard"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/goToProfile"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:src="@drawable/round_account_circle_24" />
+
+        </LinearLayout>
+
         <EditText
             android:id="@+id/editTextText"
             android:layout_width="match_parent"
@@ -146,10 +175,6 @@
 
                     <include layout="@layout/placepreview_loading" />
 
-                    <include layout="@layout/placepreview_loading" />
-
-                    <include layout="@layout/placepreview_loading" />
-
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -191,10 +216,6 @@
 
                     <include layout="@layout/placepreview_loading" />
 
-                    <include layout="@layout/placepreview_loading" />
-
-                    <include layout="@layout/placepreview_loading" />
-
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -231,10 +252,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
-                    <include layout="@layout/placepreview_loading" />
-
-                    <include layout="@layout/placepreview_loading" />
 
                     <include layout="@layout/placepreview_loading" />
 

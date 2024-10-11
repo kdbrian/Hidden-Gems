@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.LoadingDialog
@@ -52,10 +53,8 @@ class AddGem : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // Permission is granted, launch the image picker
             launchImagePicker()
         } else {
-            // Permission denied, show a message to the user
             Toast.makeText(
                 requireContext(),
                 "Permission Denied to access storage",
@@ -114,7 +113,6 @@ class AddGem : Fragment() {
             setFragmentResultListener(Constant.serving) { _, bundle ->
                 val serving = bundle.getParcelable<Serving>(Constant.serving)
                 serving?.let {
-                    println("recieved $it")
                     servings.add(serving);
                     servingsIds.add(serving.id.toString())
                     addedservingsadapter.notifyItemInserted(servings.size)
@@ -141,11 +139,13 @@ class AddGem : Fragment() {
                 val dialog = LoadingDialog.newInstance("saving gem.")
                 if (checkFields()) {
                     val gem = GemDto(
-                        placeName = editTextText2.text.trim().toString(),
+                        placeName = editTextText2.text.toString(),
                         gemId = null,
                         offerings = servingsIds.toList(),
+                        servings = servings,
                         images = images.toList(),
-                        addedBy = auth.currentUser!!.uid
+                        addedBy = auth.currentUser!!.uid,
+                        locationName = editTextText3.text.toString()
                     )
 
                     gemsViewModel.addGem(gem) { booleanResource ->
@@ -186,8 +186,7 @@ class AddGem : Fragment() {
     }
 
 
-    private fun checkPermissionAndPickImage() {
-        // Check if permission is granted (READ_EXTERNAL_STORAGE or READ_MEDIA_IMAGES depending on Android version)
+    fun checkPermissionAndPickImage() {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES // For Android 13 (Tiramisu) and above
         } else {
@@ -199,7 +198,6 @@ class AddGem : Fragment() {
                 requireContext(),
                 permission
             ) == PackageManager.PERMISSION_GRANTED -> {
-                // Permission is already granted, launch the image picker
                 launchImagePicker()
             }
 
@@ -210,9 +208,7 @@ class AddGem : Fragment() {
         }
     }
 
-    // Function to launch the image picker
-    private fun launchImagePicker() {
-        // Opens the system image picker
+    fun launchImagePicker() {
         imagePickerLauncher.launch("image/*")
     }
 

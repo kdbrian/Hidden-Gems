@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Gem
+import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.PlacepreviewBinding
 
 class PlaceListAdapter(
@@ -16,9 +17,9 @@ class PlaceListAdapter(
     val onclick: (gem: Gem) -> Unit
 ) : RecyclerView.Adapter<PlaceListAdapter.VH>() {
 
-    inner class VH(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class VH(val binding : PlacepreviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(x: Gem) {
-            PlacepreviewBinding.bind(view).apply {
+            binding.apply {
                 gem = x
                 textView5
                 if (x.images.isNotEmpty())
@@ -29,14 +30,16 @@ class PlaceListAdapter(
                         .into(imageView7)
 
                 textView6.text = "reviews ${x.reviews.size}"
-                view.setOnClickListener { onclick(x) }
+                println("servingg => ${x.offerings}")
+                placeServings.adapter = ServingListAdapter(x.servings.toMutableList())
+                root.setOnClickListener { onclick(x) }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.placepreview, parent, false)
-        return VH(view)
+        return VH(PlacepreviewBinding.bind(view))
     }
 
     override fun getItemCount(): Int {

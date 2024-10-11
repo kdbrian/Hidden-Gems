@@ -69,6 +69,9 @@ dependencies {
 
     //maps
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.maps.v1810)
+    implementation(libs.play.services.location)
+
 
     //nav
     implementation(libs.androidx.navigation.fragment)

@@ -2,9 +2,13 @@ package io.github.junrdev.hiddengems.presentation.ui.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -44,6 +48,7 @@ class HomeScreen : Fragment() {
 
         binding.apply {
 
+            goToProfile.setOnClickListener { findNavController().navigate(R.id.action_homeScreen_to_account2) }
 
             CoroutineScope(Dispatchers.Main).launch {
 
@@ -72,6 +77,7 @@ class HomeScreen : Fragment() {
                                 loadingTopPicks.apply { stopShimmer(); visibility = View.GONE }
                                 topPicks.apply {
                                     visibility = View.VISIBLE
+
                                     adapter = PlaceListAdapter(requireContext(), places) {
                                         findNavController().navigate(
                                             R.id.action_homeScreen_to_viewGem,
@@ -107,6 +113,7 @@ class HomeScreen : Fragment() {
                                 stopShimmer()
                                 visibility = View.GONE
                             }
+
                             servingsResource.data?.let { servingList ->
                                 servings.adapter = ServingListAdapter(servingList.toMutableList()){
                                     findNavController().navigate(
@@ -142,6 +149,25 @@ class HomeScreen : Fragment() {
                 findNavController().navigate(R.id.action_homeScreen_to_viewGem)
             }
 
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.accounttoolbarmenu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.account ->{
+                findNavController().navigate(R.id.action_homeScreen_to_account2)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

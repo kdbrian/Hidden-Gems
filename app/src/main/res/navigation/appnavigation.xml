@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_homeScreen_to_addGem"
             app:destination="@id/addGem" />
+        <action
+            android:id="@+id/action_homeScreen_to_account2"
+            app:destination="@id/account2" />
     </fragment>
     <fragment
         android:id="@+id/searchResults"
@@ -81,4 +84,9 @@
             android:id="@+id/action_loadingDialog_to_signInSignUp"
             app:destination="@id/signInSignUp" />
     </dialog>
+    <fragment
+        android:id="@+id/account2"
+        tools:layout="@layout/fragment_account"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.Account"
+        android:label="Account" />
 </navigation>

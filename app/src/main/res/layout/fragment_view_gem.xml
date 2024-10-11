@@ -1,187 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/richBlack"
-    android:scrollbars="none"
-    tools:context=".presentation.ui.screens.ViewGem">
+<layout>
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="place"
+            type="io.github.junrdev.hiddengems.data.model.Gem" />
+    </data>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/richBlack"
+        android:scrollbars="none"
+        tools:context=".presentation.ui.screens.ViewGem">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar2"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/richBlack"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:menu="@menu/savemenu"
-            app:navigationIcon="@drawable/round_arrow_back_24"
-            app:subtitle="@string/hello_blank_fragment"
-            app:subtitleTextColor="@color/davysGrey"
-            app:title="@string/hello_blank_fragment"
-            app:titleTextColor="@color/aliceBlue" />
+            android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/loadingPlaceImages"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <include layout="@layout/bannerimage_loading" />
-
-                    <include layout="@layout/bannerimage_loading" />
-
-
-                </LinearLayout>
-
-            </com.facebook.shimmer.ShimmerFrameLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                app:spanCount="4"
-                android:visibility="gone"
-                tools:itemCount="5"
-                tools:listitem="@layout/bannerimage" />
+                android:background="@color/richBlack"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:menu="@menu/savemenu"
+                app:navigationIcon="@drawable/round_arrow_back_24"
+                app:subtitle='@{place.locationName}'
+                app:subtitleTextColor="@color/davysGrey"
+                app:title='@{place.placeName}'
+                app:titleTextColor="@color/aliceBlue"
+                tools:subtitle="@string/hello_blank_fragment"
+                tools:title="@string/hello_blank_fragment" />
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/loadingPlaceFeatures"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
-                <LinearLayout
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/loadingPlaceImages"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <include layout="@layout/featureitem_loading" />
+                        <include layout="@layout/bannerimage_loading" />
 
-                        <include layout="@layout/featureitem_loading" />
+                        <include layout="@layout/bannerimage_loading" />
 
-                        <include layout="@layout/featureitem_loading" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <include layout="@layout/featureitem_loading" />
-
-                        <include layout="@layout/featureitem_loading" />
-
-                        <include layout="@layout/featureitem_loading" />
+                        <include layout="@layout/bannerimage_loading" />
 
                     </LinearLayout>
-                </LinearLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/imagesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                    tools:listitem="@layout/barnercarrouselimagecard">
+
+                </androidx.recyclerview.widget.RecyclerView>
+                <!--
+                                <GridLayout
+                                    android:id="@+id/imagesPreview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="250dp"
+                                    android:animateLayoutChanges="true"
+                                    android:columnCount="2"
+                                    android:rowCount="2">
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="0dp"
+                                        android:layout_height="115dp"
+                                        android:layout_row="0"
+                                        android:layout_column="0"
+                                        android:layout_columnWeight="1"
+                                        android:layout_margin="5dp"
+                                        android:background="@drawable/roundbox"
+                                        android:backgroundTint="@color/davysGrey"
+                                        app:cardCornerRadius="12dp">
+
+                                        <ImageView
+                                            android:id="@+id/image1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:scaleType="centerCrop"
+                                            android:src="@drawable/logo_transparent_png" />
+                                    </androidx.cardview.widget.CardView>
+
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_row="0"
+                                        android:layout_rowSpan="2"
+                                        android:layout_column="1"
+                                        android:layout_columnWeight="1"
+                                        android:layout_margin="5dp"
+                                        android:background="@drawable/roundbox"
+                                        android:backgroundTint="@color/davysGrey"
+                                        app:cardCornerRadius="12dp">
+
+                                        <ImageView
+                                            android:id="@+id/image2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:scaleType="centerCrop"
+                                            android:src="@drawable/logo_transparent_png" />
+                                    </androidx.cardview.widget.CardView>
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="0dp"
+                                        android:layout_height="110dp"
+                                        android:layout_row="1"
+                                        android:layout_column="0"
+                                        android:layout_columnWeight="1"
+                                        android:layout_margin="5dp"
+                                        android:background="@drawable/roundbox"
+                                        android:backgroundTint="@color/davysGrey"
+                                        app:cardCornerRadius="12dp">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <ImageView
+                                                android:id="@+id/image3"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:scaleType="centerCrop"
+                                                android:src="@drawable/logo_transparent_png" />
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:alpha="0.6"
+                                                android:background="@drawable/fadinggradient" />
+
+                                            <TextView
+                                                android:id="@+id/photocount"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentTop="true"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_gravity="center_vertical"
+                                                android:layout_marginTop="5dp"
+                                                android:layout_marginEnd="8dp"
+                                                android:textColor="@color/white"
+                                                android:textSize="12sp"
+                                                android:textStyle="bold"
+                                                tools:text="30 more" />
+
+                                            <LinearLayout
+                                                android:id="@+id/addGemImage"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_centerInParent="true"
+                                                android:orientation="horizontal">
+
+                                                <ImageView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="center_vertical"
+                                                    android:scaleType="centerCrop"
+                                                    android:src="@drawable/round_add_24" />
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="center_vertical"
+                                                    android:text="Add new"
+                                                    android:textStyle="bold" />
+                                            </LinearLayout>
+
+                                        </RelativeLayout>
+
+                                    </androidx.cardview.widget.CardView>
+
+                                </GridLayout>
+                -->
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                app:spanCount="4"
-                tools:listitem="@layout/featureitem" />
+                android:padding="12dp">
 
-        </RelativeLayout>
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/loadingPlaceFeatures"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@color/chillRed"
-            app:cardCornerRadius="12dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <include layout="@layout/featureitem_loading" />
+
+                            <include layout="@layout/featureitem_loading" />
+
+                            <include layout="@layout/featureitem_loading" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <include layout="@layout/featureitem_loading" />
+
+                            <include layout="@layout/featureitem_loading" />
+
+                            <include layout="@layout/featureitem_loading" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/servingsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:spanCount="4"
+                    tools:listitem="@layout/featureitem" />
+
+            </RelativeLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/chillRed"
+                app:cardCornerRadius="12dp">
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:drawablePadding="12dp"
+                    android:drawableTint="@color/aliceBlue"
+                    app:drawableEndCompat="@drawable/baseline_location_pin_24"
+                    tools:text="TextView" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/textView15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:drawablePadding="12dp"
-                android:drawableTint="@color/aliceBlue"
-                android:text="TextView"
-                app:drawableEndCompat="@drawable/baseline_location_pin_24" />
-        </androidx.cardview.widget.CardView>
+                android:layout_marginTop="8dp"
+                android:drawableEnd="@drawable/round_rate_review_24"
+                android:padding="12dp"
+                android:text="Reviews"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/round_rate_review_24"
-            android:padding="12dp"
-            android:text="Reviews"
-            android:textSize="16sp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/loadingReviews"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/loadingReviews"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
-                    <include layout="@layout/reviewitem_loading" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <include layout="@layout/reviewitem_loading" />
+                        <include layout="@layout/reviewitem_loading" />
 
-                    <include layout="@layout/reviewitem_loading" />
+                        <include layout="@layout/reviewitem_loading" />
 
-                    <include layout="@layout/reviewitem_loading" />
+                        <include layout="@layout/reviewitem_loading" />
 
-                </LinearLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
+                        <include layout="@layout/reviewitem_loading" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="5"
-                tools:listitem="@layout/reviewitem" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
-        </RelativeLayout>
-    </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/reviewitem" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
 
-</ScrollView>
+    </ScrollView>
+</layout>

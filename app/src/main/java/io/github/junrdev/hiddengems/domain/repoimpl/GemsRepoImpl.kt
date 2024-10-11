@@ -11,11 +11,13 @@ import io.github.junrdev.hiddengems.data.model.GemDto.Companion.toGem
 import io.github.junrdev.hiddengems.data.repo.GemsRepo
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class GemsRepoImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseStorage: FirebaseStorage
+    private val firebaseStorage: FirebaseStorage,
 ) : GemsRepo {
 
     private val gems = firestore.collection("gems")

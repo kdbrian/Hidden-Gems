@@ -31,6 +31,7 @@ class GemsViewModel @Inject constructor(
 
 
     fun getGems() {
+        _gems.postValue(Resource.Loading())
         gemsRepo.getGems { listResource ->
             _gems.postValue(listResource)
         }
@@ -66,9 +67,8 @@ class GemsViewModel @Inject constructor(
     }
 
     fun addGem(gemDto: GemDto, onResource: (Resource<Boolean>) -> Unit) {
-        gemsRepo.addGem(dto = gemDto) { onResource(it); getGems() }
+        gemsRepo.addGem(dto = gemDto) { getGems(); onResource(it) }
     }
-
 
 
 }

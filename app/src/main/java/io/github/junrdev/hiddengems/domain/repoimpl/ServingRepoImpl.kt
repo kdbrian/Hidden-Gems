@@ -22,6 +22,18 @@ class ServingRepoImpl(
             }
     }
 
+
+    override fun getServingById(servingId: String, onResource: (Resource<Serving>) -> Unit) {
+        servings.document(servingId).get()
+            .addOnSuccessListener {
+                it.toObject(Serving::class.java)?.let { sv ->
+                    onResource(Resource.Success(sv))
+                }
+            }.addOnFailureListener {
+                onResource(Resource.Error(it.message.toString()))
+            }
+    }
+
     override fun saveServing(serving: Serving, onResource: (Resource<String>) -> Unit) {
         val servingRef = servings.document()
         val withId = serving.copy(id = servingRef.id)
