@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -57,22 +56,16 @@ class HomeScreen : Fragment() {
                     when (gemsResource) {
 
                         is Resource.Error -> {
-                            loadingForYou.apply { stopShimmer() }
-                            loadingTopPicks.apply { stopShimmer() }
-                            loadingTrendingPlaces.apply { stopShimmer() }
+                            loadingTopPicks.stopShimmer()
                         }
 
                         is Resource.Loading -> {
-                            loadingForYou.apply { startShimmer() }
                             loadingTopPicks.apply { startShimmer() }
-                            loadingTrendingPlaces.apply { startShimmer() }
                         }
 
                         is Resource.Success -> {
                             val places = gemsResource.data
                             println("data $places")
-                            loadingTrendingPlaces.apply { stopShimmer() }
-                            loadingForYou.apply { stopShimmer() }
                             places?.let {
                                 loadingTopPicks.apply { stopShimmer(); visibility = View.GONE }
                                 topPicks.apply {
@@ -115,7 +108,7 @@ class HomeScreen : Fragment() {
                             }
 
                             servingsResource.data?.let { servingList ->
-                                servings.adapter = ServingListAdapter(servingList.toMutableList()){
+                                servings.adapter = ServingListAdapter(servingList.toMutableList()) {
                                     findNavController().navigate(
                                         R.id.action_homeScreen_to_searchResults,
                                         bundleOf(Constant.serving to it.name.toString())
@@ -162,11 +155,12 @@ class HomeScreen : Fragment() {
 
     @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.account ->{
+        return when (item.itemId) {
+            R.id.account -> {
                 findNavController().navigate(R.id.action_homeScreen_to_account2)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
