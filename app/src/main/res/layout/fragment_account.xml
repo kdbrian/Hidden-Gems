@@ -65,7 +65,6 @@
                         android:id="@+id/textView31"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text='@{"user#"+user.uid}'
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:textStyle="bold"
