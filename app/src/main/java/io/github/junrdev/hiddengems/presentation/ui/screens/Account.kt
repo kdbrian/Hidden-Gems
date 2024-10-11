@@ -6,13 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentAccountBinding
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
+import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class Account : Fragment() {
+
     lateinit var binding: FragmentAccountBinding
+
+    @Inject
+    lateinit var appDatastore: AppDatastore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +43,16 @@ class Account : Fragment() {
         binding.apply {
             materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
+            CoroutineScope(Dispatchers.Main).launch {
+                appDatastore.userId.first()
+            }
+
+            textView35.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    appDatastore.logoutUser()
+                    findNavController().navigate(R.id.appnavigation)
+                }
+            }
         }
     }
 }

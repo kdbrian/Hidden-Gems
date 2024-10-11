@@ -57,7 +57,11 @@
         android:id="@+id/viewGem"
         android:name="io.github.junrdev.hiddengems.presentation.ui.screens.ViewGem"
         android:label="fragment_view_gem"
-        tools:layout="@layout/fragment_view_gem" />
+        tools:layout="@layout/fragment_view_gem" >
+        <action
+            android:id="@+id/action_viewGem_to_rateDialog"
+            app:destination="@id/rateDialog" />
+    </fragment>
     <fragment
         android:id="@+id/addGem"
         android:name="io.github.junrdev.hiddengems.presentation.ui.screens.AddGem"
@@ -77,7 +81,7 @@
         tools:layout="@layout/fragment_add_serving" />
     <dialog
         android:id="@+id/loadingDialog"
-        android:name="io.github.junrdev.hiddengems.LoadingDialog"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.LoadingDialog"
         android:label="fragment_loading_dialog"
         tools:layout="@layout/fragment_loading_dialog" >
         <action
@@ -89,4 +93,9 @@
         tools:layout="@layout/fragment_account"
         android:name="io.github.junrdev.hiddengems.presentation.ui.screens.Account"
         android:label="Account" />
+    <dialog
+        android:id="@+id/rateDialog"
+        android:name="io.github.junrdev.hiddengems.presentation.ui.screens.RateDialog"
+        android:label="fragment_rate_dialog"
+        tools:layout="@layout/fragment_rate_dialog" />
 </navigation>

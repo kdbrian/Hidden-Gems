@@ -16,10 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.junrdev.hiddengems.LoadingDialog
+import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.GemDto
 import io.github.junrdev.hiddengems.data.model.Serving

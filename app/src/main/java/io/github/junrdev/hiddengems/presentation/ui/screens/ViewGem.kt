@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -95,6 +96,12 @@ class ViewGem : Fragment() {
                 } else
                     loadingReviews.stopShimmer()
 
+                textView15.setOnClickListener {
+                    findNavController().navigate(
+                        R.id.action_viewGem_to_rateDialog,
+                        bundleOf("gem" to gem)
+                    )
+                }
             }
         }
 

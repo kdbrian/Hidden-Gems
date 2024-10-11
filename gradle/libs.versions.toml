@@ -25,6 +25,7 @@ playServicesMaps = "19.0.0"
 navigationFragment = "2.8.1"
 firebaseStorage = "21.0.0"
 playServicesMapsVersion = "18.1.0"
+protobufJavalite = "3.25.1"
 roomKtx = "2.6.1"
 shimmer = "0.5.0"
 
@@ -55,6 +56,7 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 play-services-maps-v1810 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavalite" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 
 [plugins]

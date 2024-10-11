@@ -75,10 +75,11 @@
                         android:id="@+id/textView32"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text='@{}'
-                        android:translationZ="-8dp"
+                        android:text='@{user.email}'
                         android:textAlignment="center"
                         android:textSize="20sp"
+                        android:translationY="-10dp"
+                        android:translationZ="-8dp"
                         tools:text="TextView" />
                 </LinearLayout>
 
@@ -110,6 +111,63 @@
             android:textSize="18sp"
             app:thumbTint="@color/chillRed"
             app:trackTint="@color/richBlack" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="24dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ghub_logo"
+                app:tint="@color/chillRed" />
+
+            <TextView
+                android:id="@+id/textView37"
+                android:layout_marginStart="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:drawableTint="@color/richBlack"
+                android:text="Github project"
+                android:textColor="@color/aliceBlue"
+                android:textSize="18sp"
+                app:thumbTint="@color/chillRed"
+                app:trackTint="@color/richBlack" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="24dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/coding"
+                app:tint="@color/chillRed" />
+
+            <TextView
+                android:layout_marginStart="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:drawableTint="@color/richBlack"
+                android:text="Developer"
+                android:textColor="@color/aliceBlue"
+                android:textSize="18sp"
+                app:thumbTint="@color/chillRed"
+                app:trackTint="@color/richBlack" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView35"

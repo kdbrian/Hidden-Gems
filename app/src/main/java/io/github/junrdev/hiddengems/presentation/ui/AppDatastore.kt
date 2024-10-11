@@ -13,6 +13,7 @@ const val appsettings = "appsettings"
 const val loggedIn = "isLoggedIn"
 const val firstTime = "isFirstTime"
 const val uid = "userId"
+const val email = "email"
 
 private val Context.datastore by preferencesDataStore(name = appsettings)
 
@@ -23,6 +24,7 @@ class AppDatastore @Inject constructor(
     private val _isLoggedIn = booleanPreferencesKey(loggedIn)
     private val _isFirstTime = booleanPreferencesKey(firstTime)
     private val _userId = stringPreferencesKey(uid)
+    private val _userEmail = stringPreferencesKey(email)
 
     suspend fun saveFirstTime() {
         context.datastore.edit { prefs ->
@@ -35,6 +37,7 @@ class AppDatastore @Inject constructor(
         val user = firebaseAuth.currentUser
         context.datastore.edit { prefs ->
             prefs[_userId] = user!!.uid
+            prefs[_userEmail] = user.email.toString()
             prefs[_isLoggedIn] = true
         }
     }
@@ -57,5 +60,8 @@ class AppDatastore @Inject constructor(
 
     val userId = context.datastore.data.map { prefs ->
         prefs[_userId]
+    }
+    val userEmail = context.datastore.data.map { prefs ->
+        prefs[_userEmail]
     }
 }

@@ -1,11 +1,10 @@
-package io.github.junrdev.hiddengems
+package io.github.junrdev.hiddengems.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.databinding.FragmentLoadingDialogBinding
 

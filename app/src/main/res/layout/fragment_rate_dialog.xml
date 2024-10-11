@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="gem"
+            type="io.github.junrdev.hiddengems.data.model.Gem" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:backgroundTint="@color/richBlack"
+        android:padding="16dp"
+        tools:context=".presentation.ui.screens.RateDialog">
+
+
+        <TextView
+            android:id="@+id/textView37"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text='@{"rate "+gem.placeName}'
+            android:textSize="24sp"
+            tools:text="TextView" />
+
+        <EditText
+            android:id="@+id/editTextText5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/roundbox"
+            android:ems="10"
+            android:hint="the place to be"
+            android:inputType="textMultiLine"
+            android:minLines="4"
+            android:padding="8dp"
+            android:textColor="@color/chillRed"
+            android:textColorHint="@color/chillRed" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_marginVertical="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cornerRadius="12dp"
+            android:backgroundTint="@color/chillRed"
+            android:padding="12dp"
+            android:text="Button" />
+    </LinearLayout>
+
+</layout>

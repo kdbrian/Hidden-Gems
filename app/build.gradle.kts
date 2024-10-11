@@ -8,6 +8,10 @@ plugins {
     id("kotlin-parcelize")
 
     id("com.google.dagger.hilt.android")
+
+    //proto
+//    id("com.google.protobuf") version "0.8.17"
+
 }
 
 android {
@@ -108,6 +112,8 @@ dependencies {
     //okhttp
     implementation(libs.okhttp)
 
+    //protobuf
+//    implementation(libs.protobuf.javalite)
 
 }
 
@@ -115,3 +121,4 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
+

@@ -8,7 +8,7 @@
     android:backgroundTint="@color/richBlack"
     android:orientation="horizontal"
     android:padding="16dp"
-    tools:context=".LoadingDialog">
+    tools:context=".presentation.ui.LoadingDialog">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress"
