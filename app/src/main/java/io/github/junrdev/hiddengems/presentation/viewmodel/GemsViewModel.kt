@@ -67,7 +67,12 @@ class GemsViewModel @Inject constructor(
     }
 
     fun addGem(gemDto: GemDto, onResource: (Resource<Boolean>) -> Unit) {
-        gemsRepo.addGem(dto = gemDto) { getGems(); onResource(it) }
+        gemsRepo.addGem(dto = gemDto) {
+            viewModelScope.launch {
+                getGems()
+            }
+            onResource(it)
+        }
     }
 
 

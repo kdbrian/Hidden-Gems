@@ -3,10 +3,12 @@ package io.github.junrdev.hiddengems.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.Review
 import io.github.junrdev.hiddengems.data.repo.ReviewsRepo
 import io.github.junrdev.hiddengems.util.Resource
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,12 +22,15 @@ class ReviewViewModel @Inject constructor(
 
 
     private val _gemreviews: MutableLiveData<Resource<List<Review>>> = MutableLiveData()
-    val gemreviews: LiveData<Resource<List<Review>>> get() = _allreviews
+    val gemreviews: LiveData<Resource<List<Review>>> get() = _gemreviews
 
 
     suspend fun addReview(review: Review, onResource: (Resource<String>) -> Unit) {
         reviewsRepo.addReview(review) {
             onResource(it)
+            viewModelScope.launch {
+                getGemReviews(review.gemId!!)
+            }
         }
     }
 

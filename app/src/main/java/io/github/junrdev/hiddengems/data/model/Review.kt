@@ -6,11 +6,11 @@ import java.time.LocalDateTime
 
 @Parcelize
 data class Review(
-    val reviewId: String,
-    val userId: String,
-    val gemId: String,
+    val reviewId: String? = null,
+    val userId: String? = null,
+    val gemId: String? = null,
     val dateAdded: String = LocalDateTime.now().toString(),
-    val reviewText: String
+    val reviewText: String? = null
 ) : Parcelable
 
 

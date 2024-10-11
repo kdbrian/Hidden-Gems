@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.BarnercarrouselimagecardBinding
 
@@ -19,6 +20,7 @@ class ImagesListAdapter(
             binding.apply {
                 Glide.with(context)
                     .load(x)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .centerCrop()
                     .into(imageView)
             }

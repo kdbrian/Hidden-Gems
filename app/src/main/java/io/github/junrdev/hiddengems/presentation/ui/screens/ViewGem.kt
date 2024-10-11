@@ -9,15 +9,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Gem
 import io.github.junrdev.hiddengems.databinding.FragmentViewGemBinding
 import io.github.junrdev.hiddengems.presentation.adapter.ImagesListAdapter
+import io.github.junrdev.hiddengems.presentation.adapter.ReviewListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
 import io.github.junrdev.hiddengems.presentation.ui.getLocationName
+import io.github.junrdev.hiddengems.presentation.viewmodel.ReviewViewModel
 import io.github.junrdev.hiddengems.util.Constant
+import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,6 +32,7 @@ class ViewGem : Fragment() {
 
     lateinit var gem: Gem
     lateinit var binding: FragmentViewGemBinding
+    private val reviewViewModel by viewModels<ReviewViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,13 +93,25 @@ class ViewGem : Fragment() {
                 } else
                     loadingPlaceFeatures.stopShimmer()
 
+                reviewViewModel.getGemReviews(gemId = gem.gemId)
 
-                if (gem.reviews.isNotEmpty()) {
-                    loadingReviews.visibility = View.GONE
+                reviewViewModel.gemreviews.observe(viewLifecycleOwner) { reviewsResource ->
+                    when (reviewsResource) {
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> Unit
+                        is Resource.Success -> {
+                            loadingReviews.stopShimmer()
+                            if (!reviewsResource.data.isNullOrEmpty()) {
+                                loadingReviews.visibility = View.GONE
+                                reviewList.apply {
+                                    visibility = View.VISIBLE
+                                    adapter = ReviewListAdapter(reviewsResource.data)
+                                }
 
-
-                } else
-                    loadingReviews.stopShimmer()
+                            }
+                        }
+                    }
+                }
 
                 textView15.setOnClickListener {
                     findNavController().navigate(
