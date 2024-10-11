@@ -42,7 +42,7 @@ class Account : Fragment() {
             materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
             CoroutineScope(Dispatchers.Main).launch {
-                textView31.text = appDatastore.userId.first()
+                textView31.text = "user#${appDatastore.userId.first().toString().substring(5)}"
                 textView32.text = appDatastore.userEmail.first()
             }
 
