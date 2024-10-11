@@ -11,9 +11,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.junrdev.hiddengems.data.local.HiddenGemDb
 import io.github.junrdev.hiddengems.data.repo.GemsRepo
+import io.github.junrdev.hiddengems.data.repo.ReviewsRepo
 import io.github.junrdev.hiddengems.data.repo.ServingRepo
 import io.github.junrdev.hiddengems.data.repo.UsersRepo
 import io.github.junrdev.hiddengems.domain.repoimpl.GemsRepoImpl
+import io.github.junrdev.hiddengems.domain.repoimpl.ReviewsRepoImpl
 import io.github.junrdev.hiddengems.domain.repoimpl.ServingRepoImpl
 import io.github.junrdev.hiddengems.domain.repoimpl.UsersRepoImpl
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
@@ -78,10 +80,19 @@ object AppModule {
         return ServingRepoImpl(firestore)
     }
 
+
+    @Provides
+    @Singleton
+    fun providesReviewsRepo(firestore: FirebaseFirestore): ReviewsRepo {
+        return ReviewsRepoImpl(firestore)
+    }
+
+
     @Provides
     @Singleton
     fun providesAppDatastore(context: Context, firebaseAuth: FirebaseAuth): AppDatastore {
         return AppDatastore(context, firebaseAuth)
     }
+
 
 }
