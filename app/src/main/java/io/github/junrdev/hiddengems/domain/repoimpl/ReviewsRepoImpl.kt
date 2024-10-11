@@ -12,7 +12,7 @@ class ReviewsRepoImpl(
 
     private val reviewCollection = firestore.collection(Constant.reviewscollection)
 
-    override suspend fun addReview(onResource: (Resource<String>) -> Unit, review: Review) {
+    override suspend fun addReview(review: Review, onResource: (Resource<String>) -> Unit) {
         val id = reviewCollection.document()
         reviewCollection.add(review.copy(reviewId = id.id))
             .addOnSuccessListener {
