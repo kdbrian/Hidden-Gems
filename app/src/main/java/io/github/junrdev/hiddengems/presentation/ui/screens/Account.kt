@@ -1,5 +1,8 @@
 package io.github.junrdev.hiddengems.presentation.ui.screens
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -62,6 +65,11 @@ class Account : Fragment() {
                 }
 
 
+                openGithubButton.setOnClickListener {
+                    val githubUrl = "https://github.com/kdbrian/Hidden-Gems/"
+                    openGitHubLink(githubUrl)
+                }
+
             }
 
             textView35.setOnClickListener {
@@ -72,7 +80,28 @@ class Account : Fragment() {
             }
 
 
-
         }
     }
+
+    private fun openGitHubLink(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        val packageManager = requireActivity().packageManager
+        val githubAppPackage = "com.github.android"
+        if (isAppInstalled(githubAppPackage, packageManager)) {
+            intent.setPackage(githubAppPackage)
+        }
+        startActivity(intent)
+    }
+
+    private fun isAppInstalled(packageName: String, packageManager: PackageManager): Boolean {
+        return try {
+            packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
+
 }
