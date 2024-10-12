@@ -31,7 +31,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,22 +40,19 @@
             </intent-filter>
 
 
-            <!-- for ghub login-->
+            <!-- for ghub login -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- redirect scheme://host-->
                 <data
                     android:host="hiddengemsghub0auth"
-                    android:pathPrefix="/"
                     android:scheme="hiddengems" />
-
 
             </intent-filter>
 
-            <!-- for ghub login-->
         </activity>
     </application>
 
