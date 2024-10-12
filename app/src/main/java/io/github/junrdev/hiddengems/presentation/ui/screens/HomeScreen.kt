@@ -12,6 +12,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.sidesheet.SideSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentHomeScreenBinding
@@ -47,7 +49,6 @@ class HomeScreen : Fragment() {
 
         binding.apply {
 
-            goToProfile.setOnClickListener { findNavController().navigate(R.id.action_homeScreen_to_account2) }
 
             CoroutineScope(Dispatchers.Main).launch {
 

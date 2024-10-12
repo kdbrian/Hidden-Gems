@@ -1,195 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/richBlack"
-    android:scrollbars="none"
     tools:context=".presentation.ui.screens.HomeScreen">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/richBlack"
+        android:scrollbars="none"
+        tools:context=".presentation.ui.screens.HomeScreen">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/someQuote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/richBlack"
-                android:elevation="14dp"
-                android:text="Hard"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/goToProfile"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0"
-                android:src="@drawable/round_account_circle_24" />
-
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/roundbox"
-            android:drawableStart="@drawable/round_search_24"
-            android:drawablePadding="12dp"
-            android:drawableTint="@color/chillRed"
-            android:ems="10"
-            android:hint="place name"
-            android:inputType="text"
-            android:padding="16dp"
-            android:textColor="@color/davysGrey"
-            android:textColorHint="@color/davysGrey" />
-
-        <LinearLayout
-            android:id="@+id/addGem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/roundbox"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:padding="24dp">
 
                 <TextView
-                    android:id="@+id/textView24"
+                    android:id="@+id/someQuote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Found a new gem."
-                    android:textSize="16sp" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/richBlack"
+                    android:elevation="14dp"
+                    android:text="Hard"
+                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Share it and keep save it." />
+                <ImageView
+                    android:id="@+id/goToProfile"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0"
+                    android:src="@drawable/round_account_circle_24" />
+
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0"
-                android:src="@drawable/round_lightbulb_24" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/textView30"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="24dp"
-            android:text="Looking for"
-            android:textSize="18sp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/loadingServings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                    <include layout="@layout/featureitem_loading" />
-
-                </LinearLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/servings"
+            <EditText
+                android:id="@+id/editTextText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="-8dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/roundbox"
+                android:drawableStart="@drawable/round_search_24"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/chillRed"
+                android:ems="10"
+                android:hint="place name"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textColor="@color/davysGrey"
+                android:textColorHint="@color/davysGrey" />
+
+            <LinearLayout
+                android:id="@+id/addGem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/roundbox"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/featureitem" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:padding="16dp"
-            android:text="Top picks"
-            android:textSize="18sp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/loadingTopPicks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <include layout="@layout/placepreview_loading" />
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Found a new gem."
+                        android:textSize="16sp" />
 
-                    <include layout="@layout/placepreview_loading" />
-
-                    <include layout="@layout/placepreview_loading" />
-
+                    <TextView
+                        android:id="@+id/textView25"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Share it and keep save it." />
                 </LinearLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/topPicks"
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0"
+                    android:src="@drawable/round_lightbulb_24" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView30"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="2"
-                tools:listitem="@layout/placepreview" />
+                android:padding="24dp"
+                android:text="Looking for"
+                android:textSize="18sp" />
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
 
-    </LinearLayout>
-</ScrollView>
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/loadingServings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/featureitem_loading" />
+
+                        <include layout="@layout/featureitem_loading" />
+
+                        <include layout="@layout/featureitem_loading" />
+
+                        <include layout="@layout/featureitem_loading" />
+
+                        <include layout="@layout/featureitem_loading" />
+
+                        <include layout="@layout/featureitem_loading" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/servings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="-8dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/featureitem" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:padding="16dp"
+                android:text="Top picks"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/loadingTopPicks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/placepreview_loading" />
+
+                        <include layout="@layout/placepreview_loading" />
+
+                        <include layout="@layout/placepreview_loading" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/topPicks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/placepreview" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/standard_side_sheet"-->
+<!--        style="@style/Widget.Material3.SideSheet"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_gravity="start"-->
+<!--        app:layout_behavior="com.google.android.material.sidesheet.SideSheetBehavior"/>-->
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

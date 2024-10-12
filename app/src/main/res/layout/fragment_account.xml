@@ -29,63 +29,50 @@
             app:title="Account &amp; Profile."
             app:titleTextColor="@color/aliceBlue" />
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="34dp"
-            android:background="@drawable/roundbox"
-            android:orientation="vertical"
-            android:translationZ="16dp"
-            app:cardBackgroundColor="@color/richBlack"
-            app:cardCornerRadius="12dp"
-            >
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginVertical="32dp"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/hiddeng1" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="32dp"
-                android:layout_marginVertical="32dp"
-                android:orientation="horizontal">
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/hiddeng1" />
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textView31"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:orientation="vertical">
+                    android:fontFamily="@font/questrialregular"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="TextView" />
 
-                    <TextView
-                        android:id="@+id/textView31"
-                        android:layout_width="match_parent"
-                        android:fontFamily="@font/questrialregular"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        tools:text="TextView" />
-
-                    <TextView
-                        android:id="@+id/textView32"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/questrialregular"
-                        android:text='@{user.email}'
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:translationZ="-8dp"
-                        tools:text="TextView" />
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/textView32"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/questrialregular"
+                    android:text='@{user.email}'
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:translationZ="-8dp"
+                    tools:text="TextView" />
             </LinearLayout>
 
         </LinearLayout>
+
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/textView33"
@@ -114,25 +101,25 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:padding="24dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="24dp">
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_weight="0"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="0"
                 android:src="@drawable/ghub_logo"
                 app:tint="@color/chillRed" />
 
             <TextView
                 android:id="@+id/textView37"
-                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:drawableTint="@color/richBlack"
                 android:text="Github project"
                 android:textColor="@color/aliceBlue"
@@ -143,24 +130,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:padding="24dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="24dp">
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_weight="0"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="0"
                 android:src="@drawable/coding"
                 app:tint="@color/chillRed" />
 
             <TextView
-                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:drawableTint="@color/richBlack"
                 android:fontFamily="@font/questrialregular"
                 android:text="Developer"
@@ -175,8 +162,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTint="@color/richBlack"
-            android:padding="32dp"
             android:fontFamily="@font/questrialregular"
+            android:padding="32dp"
             android:text="Logout"
             android:textAlignment="center"
             android:textColor="@color/chillRed"
@@ -188,10 +175,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTint="@color/richBlack"
+            android:fontFamily="@font/questrialregular"
             android:padding="32dp"
             android:text="Vr. 0.0.1"
             android:textAlignment="center"
-            android:fontFamily="@font/questrialregular"
             android:textColor="@color/aliceBlue"
             android:textSize="12sp"
             app:trackTint="@color/richBlack" />
