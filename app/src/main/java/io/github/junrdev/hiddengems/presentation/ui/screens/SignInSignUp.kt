@@ -1,5 +1,7 @@
 package io.github.junrdev.hiddengems.presentation.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.databinding.FragmentSignInSignUpBinding
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
+import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
 import io.github.junrdev.hiddengems.presentation.ui.showToast
 import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
 import io.github.junrdev.hiddengems.util.Resource
@@ -44,6 +46,11 @@ class SignInSignUp : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
+            //github login
+            imageView5.setOnClickListener {
+                initiateGithubLogin()
+            }
 
             button2.setOnClickListener {
 
@@ -98,7 +105,9 @@ class SignInSignUp : Fragment() {
 
                                     is Resource.Error -> {
                                         dialog.dismiss()
-                                        requireContext().showToast(createAccountResource.message?:"Failed retry again.")
+                                        requireContext().showToast(
+                                            createAccountResource.message ?: "Failed retry again."
+                                        )
                                     }
 
                                     is Resource.Loading -> {
@@ -125,11 +134,18 @@ class SignInSignUp : Fragment() {
 
                         }
                     }
-
                 }
             }
 
         }
+    }
+
+    private fun initiateGithubLogin() {
+        val aouthurl =
+            "https://github.com/login/oauth/authorize?client_id=CLIENT_ID&scope=read:user,user:email" +
+                    "&redirect_uri=hiddengems://hiddengemsghub0auth"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(aouthurl))
+        startActivity(intent)
     }
 
     private fun FragmentSignInSignUpBinding.checkFields(): Boolean {

@@ -37,6 +37,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+            <!-- for ghub login-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- redirect scheme://host-->
+                <data
+                    android:host="hiddengemsghub0auth"
+                    android:pathPrefix="/"
+                    android:scheme="hiddengems" />
+
+
+            </intent-filter>
+
+            <!-- for ghub login-->
         </activity>
     </application>
 

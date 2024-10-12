@@ -10,10 +10,6 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 const val appsettings = "appsettings"
-//const val loggedIn = "isLoggedIn"
-//const val firstTime = "isFirstTime"
-//const val uid = "userId"
-//const val email = "email"
 
 private val Context.datastore by preferencesDataStore(name = appsettings)
 
@@ -27,6 +23,7 @@ class AppDatastore @Inject constructor(
     private val _userEmail = stringPreferencesKey(keys[3])
     private val _locationSharing = booleanPreferencesKey(keys[4])
     private val _rememberUser = booleanPreferencesKey(keys[5])
+    private val _gHubToken = stringPreferencesKey(keys[6])
 
     suspend fun saveFirstTime() {
         context.datastore.edit { prefs ->
@@ -50,6 +47,17 @@ class AppDatastore @Inject constructor(
             prefs[_userId] = ""
             prefs[_isLoggedIn] = false
         }
+    }
+
+    suspend fun loginGhubUser(token: String) {
+        context.datastore.edit { prefs ->
+            prefs[_gHubToken] = token
+            prefs[_isLoggedIn] = true
+        }
+    }
+
+    val ghubToken = context.datastore.data.map {
+        it[_gHubToken]
     }
 
     val isFirstTime = context.datastore.data.map { prefs ->
@@ -80,11 +88,11 @@ class AppDatastore @Inject constructor(
     }
 
     val locationSharing = context.datastore.data.map { prefs ->
-        prefs[_locationSharing]?: false
+        prefs[_locationSharing] ?: false
     }
 
     val rememberUser = context.datastore.data.map { prefs ->
-        prefs[_rememberUser]?: false
+        prefs[_rememberUser] ?: false
     }
 
     companion object {
@@ -94,7 +102,8 @@ class AppDatastore @Inject constructor(
             "userId",
             "email",
             "locationSharing",
-            "rememberMe"
+            "rememberMe",
+            "ghubToken"
         )
     }
 }
