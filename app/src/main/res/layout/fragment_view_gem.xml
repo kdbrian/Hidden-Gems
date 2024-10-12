@@ -65,10 +65,10 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/imagesList"
-                    android:clipToPadding="false"
-                    android:clipChildren="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:visibility="gone"
                     app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
                     tools:listitem="@layout/barnercarrouselimagecard">
@@ -261,15 +261,29 @@
                 app:cardBackgroundColor="@color/chillRed"
                 app:cardCornerRadius="12dp">
 
-                <TextView
-                    android:id="@+id/textView14"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:drawablePadding="12dp"
-                    android:drawableTint="@color/aliceBlue"
-                    app:drawableEndCompat="@drawable/baseline_location_pin_24"
-                    tools:text="TextView" />
+                    android:layout_margin="12dp">
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:textSize="18sp"
+                        tools:text="TextView" />
+
+                    <ImageView
+                        android:id="@+id/locationIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0"
+                        android:src="@drawable/baseline_location_pin_24"
+                        app:tint="@color/aliceBlue" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <TextView

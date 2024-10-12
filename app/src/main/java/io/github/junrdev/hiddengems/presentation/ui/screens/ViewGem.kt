@@ -112,8 +112,27 @@ class ViewGem : Fragment() {
                 if (gem.latLng != null) {
                     //resolve location name from latlng
                     textView14.text = gem.latLng!!.getAdress(requireContext())
-                } else
+                    locationIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.baseline_location_pin_24
+                        )
+                    )
+
+                    viewInMap.setOnClickListener {
+                        if (gem.latLng != null) {
+                            checkLocationPermissionAndOpenMaps(gem.latLng!!)
+                        }
+                    }
+                } else {
                     textView14.text = gem.locationName
+                    locationIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.round_location_off_24
+                        )
+                    )
+                }
 
                 if (gem.servings.isNotEmpty()) {
                     loadingPlaceFeatures.visibility = View.GONE
@@ -156,11 +175,6 @@ class ViewGem : Fragment() {
 
             }
 
-            viewInMap.setOnClickListener {
-                if (gem.latLng != null) {
-                    checkLocationPermissionAndOpenMaps(gem.latLng!!)
-                }
-            }
         }
 
     }

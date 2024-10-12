@@ -87,17 +87,18 @@ class SearchResults : Fragment() {
                                 loadingSearchResults.stopShimmer()
                                 searchResultsResource.data?.let { gemList ->
                                     if (gemList.isNotEmpty()){
-                                        textView13.text = "${gemList.size}"
+                                        textView13.text = "${gemList.size} gems"
                                         loadingSearchResults.visibility = View.GONE
                                         searchResults.visibility = View.VISIBLE
                                         searchResults.adapter =
                                             PlaceListAdapter(requireContext(), gemList) {
                                                 this@SearchResults.findNavController().navigate(
-                                                    R.id.action_homeScreen_to_viewGem,
+                                                    R.id.action_searchResults_to_viewGem,
                                                     bundleOf(Constant.gem to it)
                                                 )
                                             }
-                                    }
+                                    }else
+                                        requireContext().showToast(" \uD83D\uDE43 missing matches found")
                                 }
                             }
                         }
@@ -108,9 +109,6 @@ class SearchResults : Fragment() {
             }
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-            textView13.setOnClickListener {
-                findNavController().navigate(R.id.action_searchResults_to_viewGem)
-            }
         }
     }
 
