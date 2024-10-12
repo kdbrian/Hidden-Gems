@@ -65,6 +65,8 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/imagesList"
+                    android:clipToPadding="false"
+                    android:clipChildren="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
@@ -251,6 +253,7 @@
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/viewInMap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"

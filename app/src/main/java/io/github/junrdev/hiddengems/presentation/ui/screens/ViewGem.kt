@@ -1,16 +1,29 @@
 package io.github.junrdev.hiddengems.presentation.ui.screens
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.carousel.CarouselLayoutManager
+import com.google.android.material.carousel.CarouselSnapHelper
+import com.google.android.material.carousel.HeroCarouselStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Gem
@@ -18,7 +31,7 @@ import io.github.junrdev.hiddengems.databinding.FragmentViewGemBinding
 import io.github.junrdev.hiddengems.presentation.adapter.ImagesListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ReviewListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
-import io.github.junrdev.hiddengems.presentation.ui.getLocationName
+import io.github.junrdev.hiddengems.presentation.ui.getAdress
 import io.github.junrdev.hiddengems.presentation.viewmodel.ReviewViewModel
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
@@ -33,6 +46,20 @@ class ViewGem : Fragment() {
     lateinit var gem: Gem
     lateinit var binding: FragmentViewGemBinding
     private val reviewViewModel by viewModels<ReviewViewModel>()
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private val requestLocationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+//            gem.latLng?.let {
+//                getCurrentLocationAndOpenMaps(it)
+//            }
+        } else {
+            // Handle permission denial if needed
+            return@registerForActivityResult
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +73,9 @@ class ViewGem : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar2)
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
+
 
         binding.apply {
 
@@ -62,9 +92,7 @@ class ViewGem : Fragment() {
             loadingPlaceFeatures.apply { startShimmer() }
 
             CoroutineScope(Dispatchers.Main).launch {
-
                 if (gem.images.isNotEmpty()) {
-                    val count = gem.images.size
                     delay(300)
                     loadingPlaceImages.apply {
                         stopShimmer()
@@ -73,29 +101,34 @@ class ViewGem : Fragment() {
 
                     imagesList.apply {
                         visibility = View.VISIBLE
+                        val snapHelper = CarouselSnapHelper()
                         adapter = ImagesListAdapter(requireContext(), gem.images)
+                        layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+                        snapHelper.attachToRecyclerView(this)
                     }
                 } else
                     loadingPlaceImages.stopShimmer()
 
                 if (gem.latLng != null) {
                     //resolve location name from latlng
-                    textView14.text = requireContext().getLocationName(
-                        gem.latLng!!.latitude,
-                        gem.latLng!!.longitude
-                    )
+                    textView14.text = gem.latLng!!.getAdress(requireContext())
                 } else
                     textView14.text = gem.locationName
 
                 if (gem.servings.isNotEmpty()) {
                     loadingPlaceFeatures.visibility = View.GONE
-                    servingsList.adapter = ServingListAdapter(gem.servings.toMutableList())
+                    servingsList.apply {
+                        visibility = View.VISIBLE
+                        adapter = ServingListAdapter(gem.servings.toMutableList())
+                    }
                 } else
                     loadingPlaceFeatures.stopShimmer()
 
                 reviewViewModel.getGemReviews(gemId = gem.gemId)
-
                 reviewViewModel.gemreviews.observe(viewLifecycleOwner) { reviewsResource ->
+                    println("resource $reviewsResource")
+                    println("resourcedata ${reviewsResource.data?.size}")
+                    println("resourceerror ${reviewsResource.message}")
                     when (reviewsResource) {
                         is Resource.Error -> Unit
                         is Resource.Loading -> Unit
@@ -119,10 +152,63 @@ class ViewGem : Fragment() {
                         bundleOf("gem" to gem)
                     )
                 }
+
+
+            }
+
+            viewInMap.setOnClickListener {
+                if (gem.latLng != null) {
+                    checkLocationPermissionAndOpenMaps(gem.latLng!!)
+                }
             }
         }
 
+    }
 
+    private fun checkLocationPermissionAndOpenMaps(latLng: LatLng) {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // Permission is already granted, get location and open maps
+                getCurrentLocationAndOpenMaps(latLng)
+            }
+
+            else -> {
+                // Request location permission
+                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
+    private fun getCurrentLocationAndOpenMaps(latLng: LatLng) {
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                location?.let {
+                    openGoogleMaps(
+                        it.latitude,
+                        it.longitude,
+                        latLng.latitude,
+                        latLng.longitude
+                    ) // Example destination (San Francisco)
+                }
+            }
+    }
+
+    private fun openGoogleMaps(
+        currentLat: Double,
+        currentLng: Double,
+        destinationLat: Double,
+        destinationLng: Double
+    ) {
+        val uri =
+            Uri.parse("http://maps.google.com/maps?saddr=$currentLat,$currentLng&daddr=$destinationLat,$destinationLng")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setPackage("com.google.android.apps.maps")
+        intent.resolveActivity(requireActivity().packageManager)?.let {
+            startActivity(intent)
+        }
     }
 
 

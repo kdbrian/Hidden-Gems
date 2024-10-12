@@ -24,6 +24,11 @@ class ReviewViewModel @Inject constructor(
     private val _gemreviews: MutableLiveData<Resource<List<Review>>> = MutableLiveData()
     val gemreviews: LiveData<Resource<List<Review>>> get() = _gemreviews
 
+    init {
+        viewModelScope.launch {
+            getAllReviews()
+        }
+    }
 
     suspend fun addReview(review: Review, onResource: (Resource<String>) -> Unit) {
         reviewsRepo.addReview(review) {
@@ -37,13 +42,14 @@ class ReviewViewModel @Inject constructor(
 
     suspend fun getAllReviews() {
         reviewsRepo.getAllReviews {
-            _allreviews.postValue(it)
+            _allreviews.value = (it)
         }
     }
 
     suspend fun getGemReviews(gemId: String) {
+        _gemreviews.value = Resource.Loading()
         reviewsRepo.getGemReviews(gemId) {
-            _gemreviews.postValue(it)
+            _gemreviews.value = it
         }
     }
 

@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 data class Review(
     val reviewId: String? = null,
     val userId: String? = null,
+    val isVerified: Boolean? = false,
     val gemId: String? = null,
     val dateAdded: String = LocalDateTime.now().toString(),
     val reviewText: String? = null

@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -16,17 +15,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.GemDto
 import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentAddGemBinding
 import io.github.junrdev.hiddengems.presentation.adapter.AddGemImagesAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
+import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
+import io.github.junrdev.hiddengems.presentation.ui.getAdress
 import io.github.junrdev.hiddengems.presentation.ui.showToast
 import io.github.junrdev.hiddengems.presentation.viewmodel.GemsViewModel
+import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
 import javax.inject.Inject
@@ -46,7 +51,22 @@ class AddGem : Fragment() {
     lateinit var auth: FirebaseAuth
 
     private val gemsViewModel by viewModels<GemsViewModel>()
+    private val servingsViewModel by viewModels<ServingsViewModel>()
 
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private val requestLocationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            checkLocationPermissionAndOpenMaps()
+        } else {
+            // Handle permission denial if needed
+            requireContext().showToast("Location access is required.")
+            binding.switch1.isChecked = false
+        }
+    }
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -54,11 +74,7 @@ class AddGem : Fragment() {
         if (isGranted) {
             launchImagePicker()
         } else {
-            Toast.makeText(
-                requireContext(),
-                "Permission Denied to access storage",
-                Toast.LENGTH_SHORT
-            ).show()
+            requireContext().showToast("Permission Denied to access storage")
         }
     }
 
@@ -93,7 +109,11 @@ class AddGem : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar3)
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
+
         binding.apply {
+
             addedimagesadapter = AddGemImagesAdapter(images)
             addedservingsadapter = ServingListAdapter(servings)
             addGemImagesList.adapter = addedimagesadapter
@@ -108,9 +128,91 @@ class AddGem : Fragment() {
                     checkPermissionAndPickImage()
             }
 
+            servingsViewModel.servings.observe(viewLifecycleOwner) { servingResource ->
+                println(
+                    "res $servingResource"
+                )
+                when (servingResource) {
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> Unit
+                    is Resource.Success -> {
+                        loadingPrefilledFeaturesAdd.visibility = View.GONE
+                        val servings = servingResource.data!!
+                        for (s in servings.map { it.name }) {
+                            servingsChips.addView(
+                                Chip(
+                                    requireContext(),
+                                    null,
+                                    com.google.android.material.R.attr.chipStyle
+                                )
+                                    .apply {
+                                        text = s
+                                        isCheckable = true
+                                        checkedIcon = ContextCompat.getDrawable(
+                                            requireContext(),
+                                            R.drawable.round_check_circle_24
+                                        )
+                                        requireContext().run {
+                                            chipBackgroundColor =
+                                                getColorStateList(R.color.davysGrey)
+                                            setTextColor(
+                                                ContextCompat.getColor(
+                                                    this,
+                                                    R.color.aliceBlue
+                                                )
+                                            )
+
+                                            setOnCheckedChangeListener { _, checked ->
+                                                when (checked) {
+                                                    true -> {
+
+                                                        chipBackgroundColor =
+                                                            getColorStateList(R.color.chillRed)
+                                                        setTextColor(
+                                                            ContextCompat.getColor(
+                                                                this,
+                                                                R.color.aliceBlue
+                                                            )
+                                                        )
+
+                                                        chipIcon = ContextCompat.getDrawable(
+                                                            this,
+                                                            R.drawable.round_check_circle_24
+                                                        )
+                                                        isChipIconVisible = true
+                                                    }
+
+                                                    false -> {
+                                                        isChipIconVisible = false
+                                                        chipBackgroundColor =
+                                                            getColorStateList(R.color.davysGrey)
+                                                        setTextColor(
+                                                            ContextCompat.getColor(
+                                                                this,
+                                                                R.color.aliceBlue
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            }
+
+                                            chipStartPadding = 24f
+                                            chipEndPadding = 24f
+
+
+                                        }
+                                    }
+                            )
+                        }
+                    }
+                }
+            }
+
+
 
             setFragmentResultListener(Constant.serving) { _, bundle ->
                 val serving = bundle.getParcelable<Serving>(Constant.serving)
+
                 serving?.let {
                     servings.add(serving);
                     servingsIds.add(serving.id.toString())
@@ -131,6 +233,11 @@ class AddGem : Fragment() {
             }
 
             switch1.setOnCheckedChangeListener { _, ischecked ->
+                if (ischecked)
+                    checkLocationPermissionAndOpenMaps()
+                else
+                    switch1.text = "Am where it is"
+
                 editTextText3.isEnabled = ischecked
             }
 
@@ -165,6 +272,28 @@ class AddGem : Fragment() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun checkLocationPermissionAndOpenMaps() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+                    it?.let {
+                        val latLng = LatLng(it.latitude, it.longitude)
+                        binding.switch1.text = latLng.getAdress(requireContext())
+                    }
+                }
+            }
+
+            else -> {
+                // Request location permission
+                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
     }

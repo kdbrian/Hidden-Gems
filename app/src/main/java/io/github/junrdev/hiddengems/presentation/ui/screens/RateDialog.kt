@@ -65,8 +65,8 @@ class RateDialog : BottomSheetDialogFragment() {
                                 is Resource.Error -> requireContext().showToast("Failed to add review, ${reviewResource.message}")
                                 is Resource.Loading -> Unit
                                 is Resource.Success -> {
-                                    requireContext().showToast("reviewed")
-                                    dismiss()
+                                    requireContext().showToast(" ✔ reviewed")
+                                    dismissAllowingStateLoss()
                                 }
                             }
                         }
