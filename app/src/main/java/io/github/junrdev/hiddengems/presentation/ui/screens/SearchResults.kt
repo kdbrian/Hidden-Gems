@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
+import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentSearchResultsBinding
 import io.github.junrdev.hiddengems.presentation.adapter.PlaceListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
@@ -50,18 +51,18 @@ class SearchResults : Fragment() {
 
             arguments?.let { args ->
                 val name = args.getString("name")
-                val serving = args.getString("serving")
+                val serving = args.getParcelable<Serving>(Constant.serving)
 
-                name?.let {
-                    println("name $it")
-                    toolbar.title = it
-                    gemsViewModel.searchGemsByName(it)
-                }
+//                name?.let {
+//                    println("name $it")
+//                    toolbar.title = it
+//                    gemsViewModel.searchGemsByServing(it)
+//                }
 
                 serving?.let {
                     println("serving $it")
                     gemsViewModel.searchGemsByServing(it)
-                    toolbar.title = it
+                    toolbar.title = it.name
                 }
 
 
@@ -91,7 +92,7 @@ class SearchResults : Fragment() {
                                         searchResults.visibility = View.VISIBLE
                                         searchResults.adapter =
                                             PlaceListAdapter(requireContext(), gemList) {
-                                                findNavController().navigate(
+                                                this@SearchResults.findNavController().navigate(
                                                     R.id.action_homeScreen_to_viewGem,
                                                     bundleOf(Constant.gem to it)
                                                 )

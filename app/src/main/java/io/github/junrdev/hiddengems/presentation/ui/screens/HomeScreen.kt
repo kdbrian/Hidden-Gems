@@ -85,9 +85,6 @@ class HomeScreen : Fragment() {
                     }
                 }
 
-            }
-
-            CoroutineScope(Dispatchers.Main).launch {
                 servingsViewModel.servings.observe(viewLifecycleOwner) { servingsResource ->
                     when (servingsResource) {
                         is Resource.Error -> {
@@ -112,7 +109,7 @@ class HomeScreen : Fragment() {
                                 servings.adapter = ServingListAdapter(servingList.toMutableList()) {
                                     findNavController().navigate(
                                         R.id.action_homeScreen_to_searchResults,
-                                        bundleOf(Constant.serving to it.name.toString())
+                                        bundleOf(Constant.serving to it)
                                     )
                                 }
                                 servings.visibility = View.VISIBLE

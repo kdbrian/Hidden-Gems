@@ -1,18 +1,16 @@
 package io.github.junrdev.hiddengems.domain.repoimpl
 
 import android.net.Uri
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import io.github.junrdev.hiddengems.data.model.Gem
 import io.github.junrdev.hiddengems.data.model.GemDto
 import io.github.junrdev.hiddengems.data.model.GemDto.Companion.toGem
+import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.data.repo.GemsRepo
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class GemsRepoImpl @Inject constructor(
@@ -61,16 +59,14 @@ class GemsRepoImpl @Inject constructor(
             }
     }
 
-    override fun searchForGemByName(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
+    override fun searchForGemByServing(query: Serving, onResource: (Resource<List<Gem>>) -> Unit) {
         onResource(Resource.Loading())
-        gems.
-            //filter offerings
-        whereEqualTo("placeName", query)
-            //proceed with topics
+        gems
+            .whereArrayContains("offerings", query.id.toString())
             .get()
             .addOnSuccessListener {
                 val items = it.toObjects(Gem::class.java)
-                Resource.Success(data = items)
+                onResource(Resource.Success(data = items))
             }.addOnFailureListener {
                 onResource.invoke(Resource.Error(message = it.message.toString()))
             }
@@ -79,8 +75,7 @@ class GemsRepoImpl @Inject constructor(
     override fun searchForGemByLocation(query: String, onResource: (Resource<List<Gem>>) -> Unit) {
         onResource(Resource.Loading())
         gems.
-            //filter offerings
-            whereEqualTo("locationName", query)
+        whereEqualTo("locationName", query)
             .get()
             .addOnSuccessListener {
                 val items = it.toObjects(Gem::class.java)
