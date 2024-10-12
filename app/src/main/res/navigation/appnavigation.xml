@@ -31,6 +31,7 @@
         android:name="io.github.junrdev.hiddengems.presentation.ui.screens.HomeScreen"
         android:label="fragment_home_screen"
         tools:layout="@layout/fragment_home_screen">
+
         <action
             android:id="@+id/action_homeScreen_to_searchResults"
             app:destination="@id/searchResults" />

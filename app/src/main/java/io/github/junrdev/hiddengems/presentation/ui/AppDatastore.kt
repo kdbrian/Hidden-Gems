@@ -17,6 +17,8 @@ class AppDatastore @Inject constructor(
     private val context: Context,
     private val firebaseAuth: FirebaseAuth
 ) {
+
+
     private val _isLoggedIn = booleanPreferencesKey(keys[0])
     private val _isFirstTime = booleanPreferencesKey(keys[1])
     private val _userId = stringPreferencesKey(keys[2])
@@ -44,8 +46,9 @@ class AppDatastore @Inject constructor(
 
     suspend fun logoutUser() {
         context.datastore.edit { prefs ->
-            prefs[_userId] = ""
             prefs[_isLoggedIn] = false
+            prefs[_userId] = ""
+            prefs[_gHubToken] = ""
         }
     }
 

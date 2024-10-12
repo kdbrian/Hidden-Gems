@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.junrdev.hiddengems.BuildConfig
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.databinding.FragmentSignInSignUpBinding
@@ -141,8 +142,10 @@ class SignInSignUp : Fragment() {
     }
 
     private fun initiateGithubLogin() {
+        val clientId = BuildConfig.clientID
+
         val aouthurl =
-            "https://github.com/login/oauth/authorize?client_id=CLIENT_ID&scope=read:user,user:email" +
+            "https://github.com/login/oauth/authorize?client_id=$clientId&scope=read:user,user:email" +
                     "&redirect_uri=hiddengems://hiddengemsghub0auth"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(aouthurl))
         startActivity(intent)

@@ -4,9 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.junrdev.hiddengems.databinding.ActivityMainBinding
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
 import io.github.junrdev.hiddengems.presentation.ui.showToast
 import kotlinx.coroutines.CoroutineScope
@@ -28,35 +32,39 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var appDatastore: AppDatastore
 
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        println("started activity")
+        handleGithubAouth(intent)
     }
+
 
     //recieve new intent
     override fun onNewIntent(intent: Intent) {
-        handleGithubAouth(intent)
         super.onNewIntent(intent)
+        handleGithubAouth(intent)
     }
 
     //handle auth feedback from intent
     private fun handleGithubAouth(intent: Intent) {
+        println("recieved ${intent.data?.scheme}")
+        println("recieved ${intent.data?.getQueryParameter("code")}")
+
         intent.data?.let { uri ->
             if (uri.scheme == "hiddengems" && uri.host == "hiddengemsghub0auth") {
                 val code = uri.getQueryParameter("code")
 
                 if (code != null) {
-                    println(
-                        "code $code"
-                    )
-
+                    println("code $code")
                     exchangeCodeForAccessToken(code)
                 }
             }
@@ -68,12 +76,14 @@ class MainActivity : AppCompatActivity() {
     //get auth code from ghub
     private fun exchangeCodeForAccessToken(code: String) {
 
-//        val clientId = BuildConfig.
+        val clientId = BuildConfig.clientID
+        val clientSecret = BuildConfig.clientSecret
+
         val client = OkHttpClient()
 
         val body = FormBody.Builder()
-            .add("client_id", "")
-            .add("client_secret", "")
+            .add("client_id", clientId)
+            .add("client_secret", clientSecret)
             .add("code", code)
             .build()
 
@@ -90,14 +100,18 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.also {
-                    println(
-                        "res(login) $it"
-                    )
                     val json = JSONObject(it)
-                    val token = json.getString("access_token")
-                    token.let {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            appDatastore.loginGhubUser(token)
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        if (json.has("error")) {
+                            applicationContext.showToast(json.getString("error_description"))
+                        } else {
+                            val token = json.getString("access_token")
+                            token.let {
+                                appDatastore.loginGhubUser(token)
+                                val navController = binding.fragmentContainerView.findNavController()
+                                navController.navigate(R.id.appnavigation)
+                            }
                         }
                     }
                 }

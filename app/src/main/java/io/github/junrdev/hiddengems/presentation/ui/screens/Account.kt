@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentAccountBinding
@@ -18,6 +19,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,8 +53,27 @@ class Account : Fragment() {
             materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
             CoroutineScope(Dispatchers.Main).launch {
-                textView31.text = "user#${appDatastore.userId.first().toString().substring(0, 5)}"
-                textView32.text = appDatastore.userEmail.first()
+
+                appDatastore.ghubToken.first()?.let {
+                    //use token to fetch details for user account
+                    CoroutineScope(Dispatchers.Main).launch {
+                        fetchGitHubUserProfile(it)
+                    }
+
+                } ?: run {
+
+                    appDatastore.userId.first()?.let {
+                        textView31.text =
+                            "user#${it.substring(0, 5)}"
+                    }
+
+                    appDatastore.userEmail.first()?.let {
+                        textView32.text = it
+                    }
+
+                }
+
+
 
 
                 textView33.isChecked = appDatastore.locationSharing.first()
@@ -82,6 +109,45 @@ class Account : Fragment() {
 
         }
     }
+
+
+    //TODO:move this to users view model -> abstraction maintained
+    private fun fetchGitHubUserProfile(accessToken: String) {
+        val request = Request.Builder()
+            .url("https://api.github.com/user")
+            .header("Authorization", "Bearer $accessToken")
+            .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Handle failure
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val userData = response.body?.string()
+                userData?.let {
+                    val json = JSONObject(it)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        binding.apply {
+
+                            Glide.with(requireContext())
+                                .load(json.getString("avatar_url"))
+                                .centerCrop()
+                                .into(profilePic)
+
+                            textView31.text = "user#${json.getString("id")}"
+                            textView32.text = json.getString("login")
+
+                        }
+
+
+                    }
+                }
+            }
+        })
+    }
+
 
     private fun openGitHubLink(url: String) {
         val intent = Intent(Intent.ACTION_VIEW)

@@ -105,7 +105,7 @@ class GemsRepoImpl @Inject constructor(
                     if (downloadUrls.size == images.size) {
                         //all images uploaded
                         val updated = gem.copy(images = downloadUrls)
-                        gems.document(gem.gemId!!)
+                        gems.document(gem.gemId)
                             .set(updated, SetOptions.merge())
                             .addOnSuccessListener {
                                 onResource(Resource.Success(true))
