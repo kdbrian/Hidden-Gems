@@ -115,6 +115,11 @@ dependencies {
     //protobuf
 //    implementation(libs.protobuf.javalite)
 
+    //lottie
+//    implementation(libs.lottie)
+
+    implementation(libs.androidx.swiperefreshlayout)
+
 }
 
 // Allow references to generated code

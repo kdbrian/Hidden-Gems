@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 const val appsettings = "appsettings"
-const val loggedIn = "isLoggedIn"
-const val firstTime = "isFirstTime"
-const val uid = "userId"
-const val email = "email"
+//const val loggedIn = "isLoggedIn"
+//const val firstTime = "isFirstTime"
+//const val uid = "userId"
+//const val email = "email"
 
 private val Context.datastore by preferencesDataStore(name = appsettings)
 
@@ -21,10 +21,12 @@ class AppDatastore @Inject constructor(
     private val context: Context,
     private val firebaseAuth: FirebaseAuth
 ) {
-    private val _isLoggedIn = booleanPreferencesKey(loggedIn)
-    private val _isFirstTime = booleanPreferencesKey(firstTime)
-    private val _userId = stringPreferencesKey(uid)
-    private val _userEmail = stringPreferencesKey(email)
+    private val _isLoggedIn = booleanPreferencesKey(keys[0])
+    private val _isFirstTime = booleanPreferencesKey(keys[1])
+    private val _userId = stringPreferencesKey(keys[2])
+    private val _userEmail = stringPreferencesKey(keys[3])
+    private val _locationSharing = booleanPreferencesKey(keys[4])
+    private val _rememberUser = booleanPreferencesKey(keys[5])
 
     suspend fun saveFirstTime() {
         context.datastore.edit { prefs ->
@@ -63,5 +65,36 @@ class AppDatastore @Inject constructor(
     }
     val userEmail = context.datastore.data.map { prefs ->
         prefs[_userEmail]
+    }
+
+    suspend fun toggleLocation(value: Boolean) {
+        context.datastore.edit { prefs ->
+            prefs[_locationSharing] = value
+        }
+    }
+
+    suspend fun toggleRememberMe(value: Boolean) {
+        context.datastore.edit { prefs ->
+            prefs[_rememberUser] = value
+        }
+    }
+
+    val locationSharing = context.datastore.data.map { prefs ->
+        prefs[_locationSharing]?: false
+    }
+
+    val rememberUser = context.datastore.data.map { prefs ->
+        prefs[_rememberUser]?: false
+    }
+
+    companion object {
+        val keys = listOf(
+            "isLoggedIn",
+            "isFirstTime",
+            "userId",
+            "email",
+            "locationSharing",
+            "rememberMe"
+        )
     }
 }

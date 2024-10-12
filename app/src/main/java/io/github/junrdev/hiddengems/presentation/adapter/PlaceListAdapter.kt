@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Gem
 import io.github.junrdev.hiddengems.databinding.PlacepreviewBinding
+import kotlin.random.Random
 
 class PlaceListAdapter(
     val context: Context,
@@ -21,13 +22,17 @@ class PlaceListAdapter(
             binding.apply {
                 gem = x
                 textView5
-                if (x.images.isNotEmpty())
+
+                if (x.images.isNotEmpty()) {
+                    val rand = (Random.nextInt() % x.images.size).let { if (it < 0) it + x.images.size else it }
 
                     Glide.with(context)
-                        .load(x.images.first())
+                        .load(x.images[rand])
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .placeholder(R.drawable.logo_transparent_png)
+                        .centerCrop()
                         .into(imageView7)
+                }
 
                 textView6.text =
                     if (x.reviews.size < 3)

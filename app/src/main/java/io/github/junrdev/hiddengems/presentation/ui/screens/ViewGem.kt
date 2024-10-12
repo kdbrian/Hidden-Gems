@@ -32,6 +32,7 @@ import io.github.junrdev.hiddengems.presentation.adapter.ImagesListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ReviewListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
 import io.github.junrdev.hiddengems.presentation.ui.getAdress
+import io.github.junrdev.hiddengems.presentation.ui.jsonToLatLong
 import io.github.junrdev.hiddengems.presentation.viewmodel.ReviewViewModel
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
@@ -111,7 +112,7 @@ class ViewGem : Fragment() {
 
                 if (gem.latLng != null) {
                     //resolve location name from latlng
-                    textView14.text = gem.latLng!!.getAdress(requireContext())
+                    textView14.text = gem.latLng!!.jsonToLatLong().getAdress(requireContext())
                     locationIcon.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -121,7 +122,7 @@ class ViewGem : Fragment() {
 
                     viewInMap.setOnClickListener {
                         if (gem.latLng != null) {
-                            checkLocationPermissionAndOpenMaps(gem.latLng!!)
+                            checkLocationPermissionAndOpenMaps(gem.latLng!!.jsonToLatLong())
                         }
                     }
                 } else {
@@ -205,7 +206,7 @@ class ViewGem : Fragment() {
                         it.longitude,
                         latLng.latitude,
                         latLng.longitude
-                    ) // Example destination (San Francisco)
+                    )
                 }
             }
     }

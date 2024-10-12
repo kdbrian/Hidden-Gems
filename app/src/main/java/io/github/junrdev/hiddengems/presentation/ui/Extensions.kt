@@ -5,6 +5,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import java.util.Locale
 
 fun Context.showToast(message: String) {
@@ -29,6 +30,12 @@ fun LatLng.getAdress(context: Context): String {
     }
     return addressText
 }
+
+private val gson = Gson()
+
+fun LatLng.toStringJson() = gson.toJson(this)
+
+fun String.jsonToLatLong() = gson.fromJson(this, LatLng::class.java)
 
 
 

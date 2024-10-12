@@ -38,9 +38,6 @@ class GemsViewModel @Inject constructor(
         }
     }
 
-//    fun searchGemsByName(query: String) {
-//        gemsRepo.searchForGemByServing(query) { listResource -> _searchedgems.postValue(listResource) }
-//    }
 
     fun searchGemsByLocation(query: String) {
         gemsRepo.searchForGemByLocation(query) { listResource ->

@@ -30,6 +30,7 @@ import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
 import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
 import io.github.junrdev.hiddengems.presentation.ui.getAdress
 import io.github.junrdev.hiddengems.presentation.ui.showToast
+import io.github.junrdev.hiddengems.presentation.ui.toStringJson
 import io.github.junrdev.hiddengems.presentation.viewmodel.GemsViewModel
 import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
 import io.github.junrdev.hiddengems.util.Constant
@@ -53,14 +54,17 @@ class AddGem : Fragment() {
     private val gemsViewModel by viewModels<GemsViewModel>()
     private val servingsViewModel by viewModels<ServingsViewModel>()
 
+    private var allgemsservings: List<Serving> = emptyList()
+    private val prefilledIds = mutableListOf<Int>()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    var latLng: LatLng? = null
 
     private val requestLocationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            checkLocationPermissionAndOpenMaps()
+            checkLocationPermissionAndGetCurrentLocation()
         } else {
             // Handle permission denial if needed
             requireContext().showToast("Location access is required.")
@@ -129,15 +133,14 @@ class AddGem : Fragment() {
             }
 
             servingsViewModel.servings.observe(viewLifecycleOwner) { servingResource ->
-                println(
-                    "res $servingResource"
-                )
                 when (servingResource) {
                     is Resource.Error -> Unit
                     is Resource.Loading -> Unit
                     is Resource.Success -> {
                         loadingPrefilledFeaturesAdd.visibility = View.GONE
                         val servings = servingResource.data!!
+                        allgemsservings = servings
+
                         for (s in servings.map { it.name }) {
                             servingsChips.addView(
                                 Chip(
@@ -165,7 +168,6 @@ class AddGem : Fragment() {
                                             setOnCheckedChangeListener { _, checked ->
                                                 when (checked) {
                                                     true -> {
-
                                                         chipBackgroundColor =
                                                             getColorStateList(R.color.chillRed)
                                                         setTextColor(
@@ -180,6 +182,8 @@ class AddGem : Fragment() {
                                                             R.drawable.round_check_circle_24
                                                         )
                                                         isChipIconVisible = true
+
+
                                                     }
 
                                                     false -> {
@@ -204,10 +208,15 @@ class AddGem : Fragment() {
                                     }
                             )
                         }
+
+                        servingsChips.setOnCheckedStateChangeListener { group, checkedIds ->
+                            prefilledIds.clear()
+                            prefilledIds.addAll(checkedIds)
+                        }
+
                     }
                 }
             }
-
 
 
             setFragmentResultListener(Constant.serving) { _, bundle ->
@@ -234,7 +243,7 @@ class AddGem : Fragment() {
 
             switch1.setOnCheckedChangeListener { _, ischecked ->
                 if (ischecked)
-                    checkLocationPermissionAndOpenMaps()
+                    checkLocationPermissionAndGetCurrentLocation()
                 else
                     switch1.text = "Am where it is"
 
@@ -242,6 +251,21 @@ class AddGem : Fragment() {
             }
 
             button4.setOnClickListener {
+
+                //check for prefilled
+                if (prefilledIds.isNotEmpty()) {
+                    println("all ${allgemsservings.size}")
+                    println("prefsize ${prefilledIds.size}")
+                    println("prefs $prefilledIds")
+                    println("all $allgemsservings")
+                    println("prefsmapped ${prefilledIds.map { allgemsservings[it].id}}")
+
+                    servingsIds.addAll(prefilledIds.map { allgemsservings[it].id.toString() })
+                    servings.addAll(prefilledIds.map { allgemsservings[it] })
+                }
+
+//                return@setOnClickListener
+
                 val dialog = LoadingDialog.newInstance("saving gem.")
                 if (checkFields()) {
                     val gem = GemDto(
@@ -251,6 +275,7 @@ class AddGem : Fragment() {
                         servings = servings,
                         images = images.toList(),
                         addedBy = auth.currentUser!!.uid,
+                        latLng = latLng?.toStringJson(),
                         locationName = editTextText3.text.toString()
                     )
 
@@ -273,10 +298,13 @@ class AddGem : Fragment() {
                     }
                 }
             }
+
+            loadingFeaturesAdd.stopShimmer()
+            loadingAddPlaceImages.stopShimmer()
         }
     }
 
-    private fun checkLocationPermissionAndOpenMaps() {
+    private fun checkLocationPermissionAndGetCurrentLocation() {
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -285,8 +313,8 @@ class AddGem : Fragment() {
 
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener {
                     it?.let {
-                        val latLng = LatLng(it.latitude, it.longitude)
-                        binding.switch1.text = latLng.getAdress(requireContext())
+                        latLng = LatLng(it.latitude, it.longitude)
+                        binding.switch1.text = latLng!!.getAdress(requireContext())
                     }
                 }
             }
@@ -314,7 +342,7 @@ class AddGem : Fragment() {
     }
 
 
-    fun checkPermissionAndPickImage() {
+    private fun checkPermissionAndPickImage() {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES // For Android 13 (Tiramisu) and above
         } else {

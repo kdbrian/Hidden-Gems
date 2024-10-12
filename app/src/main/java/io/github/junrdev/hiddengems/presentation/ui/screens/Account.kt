@@ -42,8 +42,26 @@ class Account : Fragment() {
             materialToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
             CoroutineScope(Dispatchers.Main).launch {
-                textView31.text = "user#${appDatastore.userId.first().toString().substring(5)}"
+                textView31.text = "user#${appDatastore.userId.first().toString().substring(0, 5)}"
                 textView32.text = appDatastore.userEmail.first()
+
+
+                textView33.isChecked = appDatastore.locationSharing.first()
+                textView33.setOnCheckedChangeListener { _, checked ->
+                    launch {
+                        appDatastore.toggleLocation(checked)
+                    }
+                }
+
+
+                textView34.isChecked = appDatastore.locationSharing.first()
+                textView34.setOnCheckedChangeListener { _, checked ->
+                    launch {
+                        appDatastore.toggleRememberMe(checked)
+                    }
+                }
+
+
             }
 
             textView35.setOnClickListener {
@@ -52,6 +70,9 @@ class Account : Fragment() {
                     findNavController().navigate(R.id.appnavigation)
                 }
             }
+
+
+
         }
     }
 }

@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/roundbox"
+                android:background="@drawable/roundboxgreen"
                 android:orientation="horizontal"
                 android:padding="16dp">
 
@@ -154,14 +154,27 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/textView2"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:padding="16dp"
-                android:text="Top picks"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Top picks"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="More"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -199,14 +212,6 @@
 
         </LinearLayout>
     </ScrollView>
-
-<!--    <FrameLayout-->
-<!--        android:id="@+id/standard_side_sheet"-->
-<!--        style="@style/Widget.Material3.SideSheet"-->
-<!--        android:layout_width="300dp"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="start"-->
-<!--        app:layout_behavior="com.google.android.material.sidesheet.SideSheetBehavior"/>-->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
