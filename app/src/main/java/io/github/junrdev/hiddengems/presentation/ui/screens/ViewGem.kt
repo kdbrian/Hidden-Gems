@@ -31,15 +31,19 @@ import io.github.junrdev.hiddengems.databinding.FragmentViewGemBinding
 import io.github.junrdev.hiddengems.presentation.adapter.ImagesListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ReviewListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
 import io.github.junrdev.hiddengems.presentation.ui.getAdress
 import io.github.junrdev.hiddengems.presentation.ui.jsonToLatLong
+import io.github.junrdev.hiddengems.presentation.ui.showToast
 import io.github.junrdev.hiddengems.presentation.viewmodel.ReviewViewModel
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ViewGem : Fragment() {
@@ -48,6 +52,9 @@ class ViewGem : Fragment() {
     lateinit var binding: FragmentViewGemBinding
     private val reviewViewModel by viewModels<ReviewViewModel>()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    @Inject
+    lateinit var appDatastore: AppDatastore
 
     private val requestLocationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -167,10 +174,15 @@ class ViewGem : Fragment() {
                 }
 
                 textView15.setOnClickListener {
-                    findNavController().navigate(
-                        R.id.action_viewGem_to_rateDialog,
-                        bundleOf("gem" to gem)
-                    )
+                    CoroutineScope(Dispatchers.Main).launch {
+                        if (appDatastore.isEmailVerified.first()) {
+                            findNavController().navigate(
+                                R.id.action_viewGem_to_rateDialog,
+                                bundleOf("gem" to gem)
+                            )
+                        } else
+                            requireContext().showToast("\uD83D\uDE09 Verify email first to comment.")
+                    }
                 }
 
 
