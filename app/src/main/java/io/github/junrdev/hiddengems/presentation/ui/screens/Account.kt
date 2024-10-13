@@ -24,6 +24,7 @@ import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -72,18 +73,33 @@ class Account : Fragment() {
                         if (userId.isNotEmpty()) {
                             usersViewModel.loadGithubUserDetails(userId) { userResource ->
                                 when (userResource) {
-                                    is Resource.Error -> requireContext().showToast("failed to load account ${userResource.message}")
-                                    is Resource.Loading -> Unit
-                                    is Resource.Success -> {
-                                        val ghubUser = userResource.data!!
-                                        binding.apply {
-                                            println("guser $ghubUser")
-                                            Glide.with(requireContext()).load(ghubUser.avatarUrl)
-                                                .centerCrop().into(profilePic)
-                                            textView31.text = "user#${ghubUser.id}"
-                                            textView32.text = ghubUser.username
+                                    is Resource.Error -> {
+                                        loadingProfile.stopShimmer()
+                                        requireContext().showToast("failed to load account ${userResource.message}")
+                                    }
 
+                                    is Resource.Loading -> {
+                                        loadingProfile.apply {
+                                            visibility = View.VISIBLE; startShimmer()
                                         }
+                                        profileGroup.visibility = View.GONE
+                                    }
+
+                                    is Resource.Success -> {
+
+                                        val ghubUser = userResource.data!!
+                                        println("guser $ghubUser")
+                                        Glide.with(requireContext()).load(ghubUser.avatarUrl)
+                                            .centerCrop().into(profilePic)
+                                        textView31.text = "user#${ghubUser.id}"
+                                        textView32.text = ghubUser.username
+
+                                        loadingProfile.apply {
+                                            stopShimmer()
+                                            visibility = View.GONE;
+                                        }
+                                        profileGroup.visibility = View.VISIBLE
+
                                     }
                                 }
 
@@ -93,12 +109,18 @@ class Account : Fragment() {
 
                 } else if (logginMode == FIREBASE_LOGIN) {
                     //read details from datastore
-                    textView31.text =
-                        "user#${appDatastore.userId.first().toString().substring(0, 5)}"
+                    delay(200)
+                    loadingProfile.apply {
+                        stopShimmer()
+                        visibility = View.GONE;
+                    }
+                    profileGroup.visibility = View.VISIBLE
+                    textView31.text = "user#${appDatastore.userId.first().toString().substring(0, 5)}"
                     textView32.text = appDatastore.userEmail.first()
 
                 } else if (logginMode == NO_LOGIN) {
                     //TODO: consider this case
+                    loadingProfile.stopShimmer()
                 }
 
 
