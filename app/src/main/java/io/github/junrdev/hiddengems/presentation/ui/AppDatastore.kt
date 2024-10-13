@@ -18,7 +18,6 @@ class AppDatastore @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) {
 
-
     private val _isLoggedIn = booleanPreferencesKey(keys[0])
     private val _isFirstTime = booleanPreferencesKey(keys[1])
     private val _userId = stringPreferencesKey(keys[2])
@@ -26,6 +25,7 @@ class AppDatastore @Inject constructor(
     private val _locationSharing = booleanPreferencesKey(keys[4])
     private val _rememberUser = booleanPreferencesKey(keys[5])
     private val _gHubToken = stringPreferencesKey(keys[6])
+    private val _logginMode = stringPreferencesKey(keys[7])
 
     suspend fun saveFirstTime() {
         context.datastore.edit { prefs ->
@@ -33,16 +33,15 @@ class AppDatastore @Inject constructor(
         }
     }
 
-
     suspend fun loginUser() {
         val user = firebaseAuth.currentUser
         context.datastore.edit { prefs ->
             prefs[_userId] = user!!.uid
             prefs[_userEmail] = user.email.toString()
             prefs[_isLoggedIn] = true
+            prefs[_logginMode] = FIREBASE_LOGIN
         }
     }
-
 
     suspend fun logoutUser() {
         context.datastore.edit { prefs ->
@@ -52,9 +51,12 @@ class AppDatastore @Inject constructor(
         }
     }
 
-    suspend fun loginGhubUser(token: String) {
+    suspend fun loginGhubUser(token: String, userId: String) {
+        println("loginGhubUser inv $token, $userId")
         context.datastore.edit { prefs ->
             prefs[_gHubToken] = token
+            prefs[_userId] = userId
+            prefs[_logginMode] = GITHUB_LOGIN
             prefs[_isLoggedIn] = true
         }
     }
@@ -74,6 +76,7 @@ class AppDatastore @Inject constructor(
     val userId = context.datastore.data.map { prefs ->
         prefs[_userId]
     }
+
     val userEmail = context.datastore.data.map { prefs ->
         prefs[_userEmail]
     }
@@ -98,7 +101,18 @@ class AppDatastore @Inject constructor(
         prefs[_rememberUser] ?: false
     }
 
+    val logginMode = context.datastore.data.map { prefs ->
+        prefs[_logginMode] ?: NO_LOGIN
+    }
+
+
     companion object {
+
+        const val GITHUB_LOGIN = "GITHUB_LOGIN"
+        const val FIREBASE_LOGIN = "FIREBASE_LOGIN"
+        const val NO_LOGIN = "NO_LOGIN"
+
+
         val keys = listOf(
             "isLoggedIn",
             "isFirstTime",
@@ -106,7 +120,8 @@ class AppDatastore @Inject constructor(
             "email",
             "locationSharing",
             "rememberMe",
-            "ghubToken"
+            "ghubToken",
+            "logginMode"
         )
     }
 }

@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.GithubAuthCredential
+import com.google.firebase.auth.GithubAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.BuildConfig
 import io.github.junrdev.hiddengems.R
@@ -56,7 +58,6 @@ class SignInSignUp : Fragment() {
             button2.setOnClickListener {
 
                 if (checkFields()) {
-
                     CoroutineScope(Dispatchers.Main).launch {
                         val dialog = LoadingDialog.newInstance("Please wait")
                         val accountDto = AccountDto(
@@ -67,7 +68,7 @@ class SignInSignUp : Fragment() {
                         //if its not first time -> (login) otherwise (signup)
 
                         if (!checkBox.isChecked) {
-                            usersViewModel.loginUser(accountDto) { userResource ->
+                            usersViewModel.loginFirebaseUser(accountDto) { userResource ->
 
                                 println("res ${userResource.data}")
 
@@ -99,7 +100,7 @@ class SignInSignUp : Fragment() {
                             }
 
                         } else {
-                            usersViewModel.signUpUser(
+                            usersViewModel.signUpFirebaseUser(
                                 accountDto
                             ) { createAccountResource ->
                                 when (createAccountResource) {
@@ -140,6 +141,7 @@ class SignInSignUp : Fragment() {
 
         }
     }
+
 
     private fun initiateGithubLogin() {
         val clientId = BuildConfig.clientID

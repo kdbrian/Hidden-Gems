@@ -9,12 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentAccountBinding
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore.Companion.FIREBASE_LOGIN
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore.Companion.GITHUB_LOGIN
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore.Companion.NO_LOGIN
+import io.github.junrdev.hiddengems.presentation.ui.showToast
+import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
+import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -36,13 +43,12 @@ class Account : Fragment() {
     @Inject
     lateinit var appDatastore: AppDatastore
 
+    private val usersViewModel by viewModels<UsersViewModel>()
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return FragmentAccountBinding.inflate(inflater, container, false)
-            .also { binding = it }.root
+        return FragmentAccountBinding.inflate(inflater, container, false).also { binding = it }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,26 +60,46 @@ class Account : Fragment() {
 
             CoroutineScope(Dispatchers.Main).launch {
 
-                appDatastore.ghubToken.first()?.let {
-                    //use token to fetch details for user account
+                //check user account mode
+                val logginMode = appDatastore.logginMode.first()
+
+                println("mode $logginMode")
+
+                if (logginMode == GITHUB_LOGIN) {
+                    //fetch user profile from firebase
+                    val userId = appDatastore.userId.first().orEmpty()
                     CoroutineScope(Dispatchers.Main).launch {
-                        fetchGitHubUserProfile(it)
+                        if (userId.isNotEmpty()) {
+                            usersViewModel.loadGithubUserDetails(userId) { userResource ->
+                                when (userResource) {
+                                    is Resource.Error -> requireContext().showToast("failed to load account ${userResource.message}")
+                                    is Resource.Loading -> Unit
+                                    is Resource.Success -> {
+                                        val ghubUser = userResource.data!!
+                                        binding.apply {
+                                            println("guser $ghubUser")
+                                            Glide.with(requireContext()).load(ghubUser.avatarUrl)
+                                                .centerCrop().into(profilePic)
+                                            textView31.text = "user#${ghubUser.id}"
+                                            textView32.text = ghubUser.username
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
                     }
 
-                } ?: run {
+                } else if (logginMode == FIREBASE_LOGIN) {
+                    //read details from datastore
+                    textView31.text =
+                        "user#${appDatastore.userId.first().toString().substring(0, 5)}"
+                    textView32.text = appDatastore.userEmail.first()
 
-                    appDatastore.userId.first()?.let {
-                        textView31.text =
-                            "user#${it.substring(0, 5)}"
-                    }
-
-                    appDatastore.userEmail.first()?.let {
-                        textView32.text = it
-                    }
-
+                } else if (logginMode == NO_LOGIN) {
+                    //TODO: consider this case
                 }
-
-
 
 
                 textView33.isChecked = appDatastore.locationSharing.first()
@@ -84,7 +110,7 @@ class Account : Fragment() {
                 }
 
 
-                textView34.isChecked = appDatastore.locationSharing.first()
+                textView34.isChecked = appDatastore.rememberUser.first()
                 textView34.setOnCheckedChangeListener { _, checked ->
                     launch {
                         appDatastore.toggleRememberMe(checked)
@@ -111,12 +137,10 @@ class Account : Fragment() {
     }
 
 
-    //TODO:move this to users view model -> abstraction maintained
+    //TODO:move this to users repo call via model -> abstraction maintained
     private fun fetchGitHubUserProfile(accessToken: String) {
-        val request = Request.Builder()
-            .url("https://api.github.com/user")
-            .header("Authorization", "Bearer $accessToken")
-            .build()
+        val request = Request.Builder().url("https://api.github.com/user")
+            .header("Authorization", "Bearer $accessToken").build()
 
         val client = OkHttpClient()
         client.newCall(request).enqueue(object : Callback {
@@ -131,10 +155,8 @@ class Account : Fragment() {
                     CoroutineScope(Dispatchers.Main).launch {
                         binding.apply {
 
-                            Glide.with(requireContext())
-                                .load(json.getString("avatar_url"))
-                                .centerCrop()
-                                .into(profilePic)
+                            Glide.with(requireContext()).load(json.getString("avatar_url"))
+                                .centerCrop().into(profilePic)
 
                             textView31.text = "user#${json.getString("id")}"
                             textView32.text = json.getString("login")
