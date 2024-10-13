@@ -115,7 +115,8 @@ class Account : Fragment() {
                         visibility = View.GONE;
                     }
                     profileGroup.visibility = View.VISIBLE
-                    textView31.text = "user#${appDatastore.userId.first().toString().substring(0, 5)}"
+                    textView31.text =
+                        "user#${appDatastore.userId.first().toString().substring(0, 5)}"
                     textView32.text = appDatastore.userEmail.first()
 
                 } else if (logginMode == NO_LOGIN) {
@@ -126,7 +127,7 @@ class Account : Fragment() {
 
                 textView33.isChecked = appDatastore.locationSharing.first()
                 textView33.setOnCheckedChangeListener { _, checked ->
-                    launch {
+                    CoroutineScope(Dispatchers.Main).launch {
                         appDatastore.toggleLocation(checked)
                     }
                 }
@@ -134,7 +135,7 @@ class Account : Fragment() {
 
                 textView34.isChecked = appDatastore.rememberUser.first()
                 textView34.setOnCheckedChangeListener { _, checked ->
-                    launch {
+                    CoroutineScope(Dispatchers.Main).launch {
                         appDatastore.toggleRememberMe(checked)
                     }
                 }

@@ -23,6 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="14dp"
+                android:overScrollMode="ifContentScrolls"
                 android:padding="24dp">
 
                 <TextView
@@ -31,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:background="@color/richBlack"
                     android:elevation="14dp"
                     android:text="Hard"
                     android:textSize="18sp" />

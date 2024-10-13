@@ -16,7 +16,6 @@ import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentSearchResultsBinding
 import io.github.junrdev.hiddengems.presentation.adapter.PlaceListAdapter
-import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
 import io.github.junrdev.hiddengems.presentation.ui.showToast
 import io.github.junrdev.hiddengems.presentation.viewmodel.GemsViewModel
 import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
@@ -53,22 +52,65 @@ class SearchResults : Fragment() {
                 val name = args.getString("name")
                 val serving = args.getParcelable<Serving>(Constant.serving)
 
-//                name?.let {
-//                    println("name $it")
-//                    toolbar.title = it
-//                    gemsViewModel.searchGemsByServing(it)
-//                }
+                name?.let { searchName ->
+                    toolbar.title = "results for $searchName"
+
+                    gemsViewModel.gems.observe(viewLifecycleOwner) { gemsResource ->
+                        when (gemsResource) {
+                            is Resource.Error -> {
+                                requireContext().showToast("something went wrong ${gemsResource.message}")
+                                loadingSearchResults.stopShimmer()
+                            }
+
+                            is Resource.Loading -> {
+                                loadingSearchResults.apply {
+                                    startShimmer(); visibility = View.VISIBLE
+                                }
+                                searchResults.visibility = View.GONE
+                            }
+
+                            is Resource.Success -> {
+                                val gems = gemsResource.data!!.filter {
+                                    it.locationName?.contains(
+                                        searchName,
+                                        true
+                                    ) == true
+                                            ||
+                                            it.placeName.contains(
+                                                searchName,
+                                                true
+                                            )
+                                }
+
+                                loadingSearchResults.stopShimmer()
+                                if (gems.isNotEmpty()) {
+                                    textView13.text = "${gems.size} gems"
+                                    loadingSearchResults.visibility = View.GONE
+                                    searchResults.visibility = View.VISIBLE
+                                    searchResults.adapter =
+                                        PlaceListAdapter(requireContext(), gems) {
+                                            this@SearchResults.findNavController().navigate(
+                                                R.id.action_searchResults_to_viewGem,
+                                                bundleOf(Constant.gem to it)
+                                            )
+                                        }
+                                } else
+                                    requireContext().showToast(" \uD83D\uDE43 missing matches.")
+                            }
+                        }
+                    }
+                }
 
                 serving?.let {
                     println("serving $it")
                     gemsViewModel.searchGemsByServing(it)
-                    toolbar.title = it.name
+                    toolbar.title = "results for ${it.name}"
                 }
 
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    gemsViewModel.searchedgems.observe(viewLifecycleOwner) { searchResultsResource ->
 
+                    gemsViewModel.searchedgems.observe(viewLifecycleOwner) { searchResultsResource ->
                         when (searchResultsResource) {
                             is Resource.Error -> {
                                 loadingSearchResults.stopShimmer()
@@ -86,7 +128,7 @@ class SearchResults : Fragment() {
                             is Resource.Success -> {
                                 loadingSearchResults.stopShimmer()
                                 searchResultsResource.data?.let { gemList ->
-                                    if (gemList.isNotEmpty()){
+                                    if (gemList.isNotEmpty()) {
                                         textView13.text = "${gemList.size} gems"
                                         loadingSearchResults.visibility = View.GONE
                                         searchResults.visibility = View.VISIBLE
@@ -97,8 +139,8 @@ class SearchResults : Fragment() {
                                                     bundleOf(Constant.gem to it)
                                                 )
                                             }
-                                    }else
-                                        requireContext().showToast(" \uD83D\uDE43 missing matches found")
+                                    } else
+                                        requireContext().showToast(" \uD83D\uDE43 missing matches.")
                                 }
                             }
                         }

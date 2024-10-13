@@ -39,6 +39,7 @@ class GemsViewModel @Inject constructor(
     }
 
 
+    //latlng -> google maps involved
     fun searchGemsByLocation(query: String) {
         gemsRepo.searchForGemByLocation(query) { listResource ->
             _searchedgems.postValue(
