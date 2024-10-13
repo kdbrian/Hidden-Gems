@@ -26,6 +26,7 @@ class AppDatastore @Inject constructor(
     private val _rememberUser = booleanPreferencesKey(keys[5])
     private val _gHubToken = stringPreferencesKey(keys[6])
     private val _logginMode = stringPreferencesKey(keys[7])
+    private val _isEmailVerified = booleanPreferencesKey(keys[8])
 
     suspend fun saveFirstTime() {
         context.datastore.edit { prefs ->
@@ -38,6 +39,7 @@ class AppDatastore @Inject constructor(
         context.datastore.edit { prefs ->
             prefs[_userId] = user!!.uid
             prefs[_userEmail] = user.email.toString()
+            prefs[_isEmailVerified] = user.isEmailVerified
             prefs[_isLoggedIn] = true
             prefs[_logginMode] = FIREBASE_LOGIN
         }
@@ -81,6 +83,10 @@ class AppDatastore @Inject constructor(
         prefs[_userEmail]
     }
 
+    val isEmailVerified = context.datastore.data.map { prefs ->
+        prefs[_isEmailVerified] ?: false
+    }
+
     suspend fun toggleLocation(value: Boolean) {
         context.datastore.edit { prefs ->
             prefs[_locationSharing] = value
@@ -121,7 +127,8 @@ class AppDatastore @Inject constructor(
             "locationSharing",
             "rememberMe",
             "ghubToken",
-            "logginMode"
+            "logginMode",
+            "emailVerified"
         )
     }
 }

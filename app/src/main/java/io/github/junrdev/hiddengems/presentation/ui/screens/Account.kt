@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentAccountBinding
@@ -44,6 +45,9 @@ class Account : Fragment() {
     @Inject
     lateinit var appDatastore: AppDatastore
 
+    @Inject
+    lateinit var auth: FirebaseAuth
+
     private val usersViewModel by viewModels<UsersViewModel>()
 
     override fun onCreateView(
@@ -68,6 +72,7 @@ class Account : Fragment() {
 
                 if (logginMode == GITHUB_LOGIN) {
                     //fetch user profile from firebase
+                    textView38.visibility = View.GONE
                     val userId = appDatastore.userId.first().orEmpty()
                     CoroutineScope(Dispatchers.Main).launch {
                         if (userId.isNotEmpty()) {
@@ -114,6 +119,22 @@ class Account : Fragment() {
                         stopShimmer()
                         visibility = View.GONE;
                     }
+
+                    textView38.isChecked = appDatastore.isEmailVerified.first()
+
+                    if (appDatastore.isEmailVerified.first()) {
+                        textView38.isEnabled = false
+                    } else
+                        textView38.setOnCheckedChangeListener { _, checked ->
+                            if (checked) {
+                                textView38.isChecked = false
+                                auth.currentUser!!.sendEmailVerification()
+                                    .addOnSuccessListener { requireContext().showToast("check your mailbox to verify email."); return@addOnSuccessListener }
+                                    .addOnFailureListener { requireContext().showToast("Failed to send email due to ${it.message}"); return@addOnFailureListener }
+                            } else
+                                return@setOnCheckedChangeListener
+                        }
+
                     profileGroup.visibility = View.VISIBLE
                     textView31.text =
                         "user#${appDatastore.userId.first().toString().substring(0, 5)}"

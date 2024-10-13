@@ -87,10 +87,10 @@
 
                 <LinearLayout
                     android:id="@+id/profileGroup"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profilePic"
@@ -154,6 +154,18 @@
             android:drawableTint="@color/richBlack"
             android:padding="32dp"
             android:text="Remember me"
+            android:textColor="@color/aliceBlue"
+            android:textSize="18sp"
+            app:thumbTint="@color/chillRed"
+            app:trackTint="@color/richBlack" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/textView38"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableTint="@color/richBlack"
+            android:padding="32dp"
+            android:text="Verify email"
             android:textColor="@color/aliceBlue"
             android:textSize="18sp"
             app:thumbTint="@color/chillRed"
