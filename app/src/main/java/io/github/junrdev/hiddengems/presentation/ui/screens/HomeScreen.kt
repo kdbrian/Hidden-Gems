@@ -17,13 +17,17 @@ import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.databinding.FragmentHomeScreenBinding
 import io.github.junrdev.hiddengems.presentation.adapter.PlaceListAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
+import io.github.junrdev.hiddengems.presentation.ui.showToast
 import io.github.junrdev.hiddengems.presentation.viewmodel.GemsViewModel
 import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -32,6 +36,10 @@ class HomeScreen : Fragment() {
     lateinit var binding: FragmentHomeScreenBinding
     private val gemsViewModel by viewModels<GemsViewModel>()
     private val servingsViewModel by viewModels<ServingsViewModel>()
+
+    @Inject
+    lateinit var appDatastore: AppDatastore
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +52,6 @@ class HomeScreen : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.apply {
 
             goToProfile.setOnClickListener { findNavController().navigate(R.id.action_homeScreen_to_account2) }
@@ -139,8 +146,15 @@ class HomeScreen : Fragment() {
                     false
                 }
             }
+
+
             addGem.setOnClickListener {
-                findNavController().navigate(R.id.action_homeScreen_to_addGem)
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (appDatastore.isEmailVerified.first()){
+                        findNavController().navigate(R.id.action_homeScreen_to_addGem)
+                    }else
+                        requireContext().showToast("Ooops\uD83D\uDE1F\uD83D\uDE1F, verify email first.")
+                }
             }
             textView2.setOnClickListener {
                 findNavController().navigate(R.id.action_homeScreen_to_viewGem)
@@ -168,4 +182,6 @@ class HomeScreen : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
 }
