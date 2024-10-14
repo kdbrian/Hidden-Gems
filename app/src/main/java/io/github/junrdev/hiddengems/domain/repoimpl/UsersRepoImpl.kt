@@ -7,8 +7,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import io.github.junrdev.hiddengems.BuildConfig
 import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.data.model.AppUser
-import io.github.junrdev.hiddengems.data.model.GithubUser
-import io.github.junrdev.hiddengems.data.model.UserAccount
+import io.github.junrdev.hiddengems.data.model.GithubUserAccount
+import io.github.junrdev.hiddengems.data.model.FirebaseUserAccount
 import io.github.junrdev.hiddengems.data.repo.UsersRepo
 import io.github.junrdev.hiddengems.util.AccountMode
 import io.github.junrdev.hiddengems.util.AccountMode.Companion.toMode
@@ -39,7 +39,7 @@ class UsersRepoImpl @Inject constructor(
                 authResult.user?.let { firebaseUser ->
                     firestore.collection(Constant.usercollection)
                         .document(firebaseUser.uid)
-                        .set(UserAccount(id = firebaseUser.uid, email = firebaseUser.email!!))
+                        .set(FirebaseUserAccount(id = firebaseUser.uid, email = firebaseUser.email!!))
                         .addOnSuccessListener { onResource(Resource.Success(data = firebaseUser)) }
                         .addOnFailureListener { onResource(Resource.Error(message = it.message.toString())) }
                 }
@@ -61,11 +61,11 @@ class UsersRepoImpl @Inject constructor(
             .addOnFailureListener { onResource(Resource.Error(message = it.message.toString())) }
     }
 
-    override fun getAllUsers(onResource: (Resource<List<UserAccount>>) -> Unit) {
+    override fun getAllUsers(onResource: (Resource<List<FirebaseUserAccount>>) -> Unit) {
         val users = firestore.collection(Constant.usercollection)
         users.get()
             .addOnSuccessListener {
-                val accounts = it.toObjects(UserAccount::class.java)
+                val accounts = it.toObjects(FirebaseUserAccount::class.java)
                 onResource(Resource.Success(data = accounts))
             }
             .addOnFailureListener { onResource(Resource.Error(message = it.message.toString())) }
@@ -91,22 +91,22 @@ class UsersRepoImpl @Inject constructor(
 
                 //deserialize genuinelly
                 val accs = when (account.toMode()) {
-                    AccountMode.FIREBASE_LOGIN -> documentSnapshot.toObject(UserAccount::class.java)
-                    AccountMode.GITHUB_LOGIN -> documentSnapshot.toObject(GithubUser::class.java)
-                    AccountMode.NO_LOGIN -> documentSnapshot.toObject(UserAccount::class.java)
+                    AccountMode.FIREBASE_LOGIN -> documentSnapshot.toObject(FirebaseUserAccount::class.java)
+                    AccountMode.GITHUB_LOGIN -> documentSnapshot.toObject(GithubUserAccount::class.java)
+                    AccountMode.NO_LOGIN -> documentSnapshot.toObject(FirebaseUserAccount::class.java)
                 }
 
                 accs?.let { onResource(Resource.Success(it)) }
             }.addOnFailureListener { onResource(Resource.Error(it.message.toString())) }
     }
 
-    override fun saveGithubUser(githubUser: GithubUser, onResource: (Resource<String>) -> Unit) {
+    override fun saveGithubUser(githubUserAccount: GithubUserAccount, onResource: (Resource<String>) -> Unit) {
         firestore.collection(Constant.githubuserscollection)
             //check for user
-            .whereEqualTo("id", githubUser.id)
+            .whereEqualTo("id", githubUserAccount.id)
             .get()
             .addOnSuccessListener {
-                val users = it.toObjects(GithubUser::class.java)
+                val users = it.toObjects(GithubUserAccount::class.java)
                 if (users.isNotEmpty()) {
                     //user already exists : return firebase Id
                     val user = users.first()
@@ -117,7 +117,7 @@ class UsersRepoImpl @Inject constructor(
                     //first timer
                     val userRef = firestore.collection(Constant.githubuserscollection).document()
                     userRef.set(
-                        githubUser.copy(fireBaseId = userRef.id)
+                        githubUserAccount.copy(fireBaseId = userRef.id)
                     ).addOnSuccessListener {
                         onResource(Resource.Success(userRef.id))
                     }.addOnFailureListener { onResource(Resource.Error(it.message.toString())) }
@@ -170,7 +170,7 @@ class UsersRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGithubUserInfo(token: String): Result<GithubUser> {
+    override suspend fun getGithubUserInfo(token: String): Result<GithubUserAccount> {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url("https://api.github.com/user")
@@ -187,7 +187,7 @@ class UsersRepoImpl @Inject constructor(
                 Timber.d("userdate $userData")
 
                 val json = JSONObject(userData)
-                val githubUser = GithubUser(
+                val githubUserAccount = GithubUserAccount(
                     username = json.getString("login"),
                     id = json.getString("id"),//user ghub id as id
                     followers = json.getString("followers"),
@@ -195,8 +195,8 @@ class UsersRepoImpl @Inject constructor(
                     fireBaseId = json.getString("id")
                 )
 
-                Timber.d("created $githubUser")
-                Result.success(githubUser)
+                Timber.d("created $githubUserAccount")
+                Result.success(githubUserAccount)
             } else
                 Result.failure(Exception(resp.message))
         } catch (e: Exception) {

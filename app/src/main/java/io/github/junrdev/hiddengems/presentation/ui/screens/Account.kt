@@ -15,8 +15,8 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
-import io.github.junrdev.hiddengems.data.model.GithubUser
-import io.github.junrdev.hiddengems.data.model.UserAccount
+import io.github.junrdev.hiddengems.data.model.GithubUserAccount
+import io.github.junrdev.hiddengems.data.model.FirebaseUserAccount
 import io.github.junrdev.hiddengems.databinding.FragmentAccountBinding
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
 import io.github.junrdev.hiddengems.presentation.ui.showToast
@@ -98,7 +98,7 @@ class Account : Fragment() {
                                         appUser?.let {
                                             when (it) {
                                                 //load account type
-                                                is GithubUser -> {
+                                                is GithubUserAccount -> {
                                                     val ghubUser = it
                                                     println("guser $ghubUser")
                                                     Glide.with(requireContext())
@@ -110,7 +110,7 @@ class Account : Fragment() {
                                                     println("github user")
                                                 }
 
-                                                is UserAccount -> {
+                                                is FirebaseUserAccount -> {
                                                     appDatastore.refreshVerificationDetails()
                                                     textView38.isChecked =
                                                         appDatastore.isEmailVerified.first()

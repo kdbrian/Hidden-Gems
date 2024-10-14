@@ -7,8 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.data.model.AppUser
-import io.github.junrdev.hiddengems.data.model.GithubUser
-import io.github.junrdev.hiddengems.data.model.UserAccount
+import io.github.junrdev.hiddengems.data.model.FirebaseUserAccount
 import io.github.junrdev.hiddengems.data.repo.UsersRepo
 import io.github.junrdev.hiddengems.util.Resource
 import timber.log.Timber
@@ -19,8 +18,8 @@ class UsersViewModel @Inject constructor(
     private val usersRepo: UsersRepo
 ) : ViewModel() {
 
-    private val _users: MutableLiveData<Resource<List<UserAccount>>> = MutableLiveData()
-    val users: LiveData<Resource<List<UserAccount>>> get() = _users
+    private val _users: MutableLiveData<Resource<List<FirebaseUserAccount>>> = MutableLiveData()
+    val users: LiveData<Resource<List<FirebaseUserAccount>>> get() = _users
 
 
     fun loginFirebaseUser(accountDto: AccountDto, onResource: (Resource<FirebaseUser>) -> Unit) {

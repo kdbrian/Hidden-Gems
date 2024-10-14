@@ -5,14 +5,6 @@ import io.github.junrdev.hiddengems.util.AccountMode
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
-@Parcelize
-data class UserAccount(
-    val id: String,
-    val email: String,
-    val dateJoined: String = LocalDateTime.now().toString(),
-    val createdBy: String? = AccountMode.FIREBASE_LOGIN.mode,
-) : Parcelable, AppUser(uid = id)
-
 //default app user
 open class AppUser(
     //firebase id
@@ -20,6 +12,14 @@ open class AppUser(
     val rememberMe: Boolean = false,
     val locationSharing: Boolean = false,
 )
+
+@Parcelize
+data class FirebaseUserAccount(
+    val id: String,
+    val email: String,
+    val dateJoined: String = LocalDateTime.now().toString(),
+    val createdBy: String? = AccountMode.FIREBASE_LOGIN.mode,
+) : Parcelable, AppUser(uid = id)
 
 @Parcelize
 data class AccountDto(
@@ -30,7 +30,7 @@ data class AccountDto(
 
 
 @Parcelize
-data class GithubUser(
+data class GithubUserAccount(
     private var fireBaseId: String = "null",
     val id: String? = null, //github id
     val username: String? = null,
