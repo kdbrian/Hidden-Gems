@@ -1,6 +1,6 @@
 # Hidden Gems
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Kotlin](https://img.shields.io/badge/Kotlin-1.5.0-blue.svg) ![Android](https://img.shields.io/badge/Android-11.0-green.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Kotlin](https://img.shields.io/badge/Kotlin-1.5.0-blue.svg) ![Android](https://img.shields.io/badge/Android-%E2%9A%9C-brightgreen.svg)
 
 ## Description
 

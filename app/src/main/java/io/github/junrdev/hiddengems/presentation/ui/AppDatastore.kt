@@ -64,10 +64,10 @@ class AppDatastore @Inject constructor(
     }
 
     suspend fun loginGhubUser(token: String, userId: String) {
-        println("loginGhubUser inv $token, $userId")
         context.datastore.edit { prefs ->
             prefs[_gHubToken] = token
             prefs[_userId] = userId
+            prefs[_isEmailVerified] = true
             prefs[_logginMode] = AccountMode.GITHUB_LOGIN.mode
             prefs[_isLoggedIn] = true
         }
