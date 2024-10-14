@@ -127,6 +127,10 @@ dependencies {
     //chrome browser tabs extension
     implementation(libs.androidx.browser)
 
+    //timber-> logger
+    implementation(libs.timber)
+
+
 }
 
 // Allow references to generated code
