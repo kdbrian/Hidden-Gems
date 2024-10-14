@@ -8,15 +8,15 @@ import java.time.LocalDateTime
 //default app user
 open class AppUser(
     //firebase id
-    val uid: String,
+    val uid: String = "",
     val rememberMe: Boolean = false,
     val locationSharing: Boolean = false,
 )
 
 @Parcelize
 data class FirebaseUserAccount(
-    val id: String,
-    val email: String,
+    val id: String="",
+    val email: String="",
     val dateJoined: String = LocalDateTime.now().toString(),
     val createdBy: String? = AccountMode.FIREBASE_LOGIN.mode,
 ) : Parcelable, AppUser(uid = id)

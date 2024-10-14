@@ -93,12 +93,12 @@ class Account : Fragment() {
                                             visibility = View.GONE;
                                         }
                                         profileGroup.visibility = View.VISIBLE
-                                        textView38.visibility = View.GONE
 
                                         appUser?.let {
                                             when (it) {
                                                 //load account type
                                                 is GithubUserAccount -> {
+                                                    textView38.visibility = View.GONE
                                                     val ghubUser = it
                                                     println("guser $ghubUser")
                                                     Glide.with(requireContext())

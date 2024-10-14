@@ -8,5 +8,5 @@ object Constant {
     const val gemsimagesdir = "gemsimages"
     const val serving = "serving"
     const val gem = "gem"
-    const val servingcollection = "servings"
+    const val servingcollection = "servings-prod1"
 }

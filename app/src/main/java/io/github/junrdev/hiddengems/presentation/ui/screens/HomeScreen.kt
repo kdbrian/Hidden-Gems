@@ -112,19 +112,19 @@ class HomeScreen : Fragment() {
                         }
 
                         is Resource.Success -> {
-                            loadingServings.apply {
-                                stopShimmer()
-                                visibility = View.GONE
-                            }
+                            loadingServings.stopShimmer()
 
                             servingsResource.data?.let { servingList ->
-                                servings.adapter = ServingListAdapter(servingList.toMutableList()) {
-                                    findNavController().navigate(
-                                        R.id.action_homeScreen_to_searchResults,
-                                        bundleOf(Constant.serving to it)
-                                    )
+                                if (servingList.isNotEmpty()){
+                                    loadingServings.visibility = View.GONE
+                                    servings.adapter = ServingListAdapter(servingList.toMutableList()) {
+                                        findNavController().navigate(
+                                            R.id.action_homeScreen_to_searchResults,
+                                            bundleOf(Constant.serving to it)
+                                        )
+                                    }
+                                    servings.visibility = View.VISIBLE
                                 }
-                                servings.visibility = View.VISIBLE
                             }
                         }
                     }
