@@ -120,6 +120,7 @@ class Account : Fragment() {
                         visibility = View.GONE;
                     }
 
+                    appDatastore.refreshVerificationDetails()
                     textView38.isChecked = appDatastore.isEmailVerified.first()
 
                     if (appDatastore.isEmailVerified.first()) {

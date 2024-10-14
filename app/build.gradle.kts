@@ -30,6 +30,8 @@ android {
         buildConfigField("String", "mapsApiKey", "\"${System.getenv("mapsApiKey") ?: ""}\"")
         buildConfigField("String", "clientID", "\"${System.getenv("clientID") ?: ""}\"")
         buildConfigField("String", "clientSecret", "\"${System.getenv("clientSecret") ?: ""}\"")
+
+
     }
 
     buildTypes {

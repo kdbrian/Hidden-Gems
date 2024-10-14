@@ -20,6 +20,9 @@ class UsersViewModel @Inject constructor(
     private val _users: MutableLiveData<Resource<List<UserAccount>>> = MutableLiveData()
     val users: LiveData<Resource<List<UserAccount>>> get() = _users
 
+    private val _loggedInState: MutableLiveData<Resource<Boolean>> = MutableLiveData()
+    val loggedInState: LiveData<Resource<Boolean>> get() = _loggedInState
+
     fun loginFirebaseUser(accountDto: AccountDto, onResource: (Resource<FirebaseUser>) -> Unit) {
         usersRepo.login(accountDto) { firebaseUserResource ->
             onResource(firebaseUserResource)
@@ -36,10 +39,18 @@ class UsersViewModel @Inject constructor(
 
 
     suspend fun loginGithubUserWithCode(code: String): Resource<String> { //returns the token
+        _loggedInState.postValue(Resource.Loading())
         val tokenResult = usersRepo.getGithubUserTokenFromLoginCode(code)
         return when (tokenResult.isSuccess) {
-            true -> Resource.Success(tokenResult.getOrNull()!!)
-            false -> Resource.Error(message = tokenResult.exceptionOrNull()?.message.toString())
+            true -> {
+                _loggedInState.postValue(Resource.Success(true))
+                Resource.Success(tokenResult.getOrNull()!!)
+            }
+
+            false -> {
+                _loggedInState.postValue(Resource.Error(message = tokenResult.exceptionOrNull()?.message.toString()))
+                Resource.Error(message = tokenResult.exceptionOrNull()?.message.toString())
+            }
         }
     }
 

@@ -45,11 +45,20 @@ class AppDatastore @Inject constructor(
         }
     }
 
+    suspend fun refreshVerificationDetails() {
+        context.datastore.edit { prefs ->
+            prefs[_isEmailVerified] = firebaseAuth.currentUser?.isEmailVerified ?: false
+        }
+    }
+
+
     suspend fun logoutUser() {
         context.datastore.edit { prefs ->
             prefs[_isLoggedIn] = false
             prefs[_userId] = ""
             prefs[_gHubToken] = ""
+            prefs[_rememberUser] = false
+            prefs[_locationSharing] = false
         }
     }
 

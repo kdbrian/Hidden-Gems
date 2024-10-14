@@ -55,8 +55,30 @@ class SignInSignUp : Fragment() {
                 initiateGithubLogin()
             }
 
-            button2.setOnClickListener {
+            val loading = LoadingDialog.newInstance("Attempting loggin please wait..")
 
+            usersViewModel.loggedInState.observe(viewLifecycleOwner){logginResource ->
+                when(logginResource){
+                    is Resource.Error -> {
+                        if(loading.isVisible)
+                            loading.dismiss()
+                        requireContext().showToast(logginResource.message.toString())
+                    }
+                    is Resource.Loading -> {
+                        loading.show(parentFragmentManager, null)
+                    }
+                    is Resource.Success -> {
+                        loading.dismiss()
+                        findNavController().navigate(R.id.action_signInSignUp_to_homeScreen)
+                        findNavController().popBackStack(
+                            R.id.action_signInSignUp_to_homeScreen,
+                            true
+                        )
+                    }
+                }
+            }
+
+            button2.setOnClickListener {
                 if (checkFields()) {
                     CoroutineScope(Dispatchers.Main).launch {
                         val dialog = LoadingDialog.newInstance("Please wait")
@@ -98,7 +120,6 @@ class SignInSignUp : Fragment() {
                                     }
                                 }
                             }
-
                         } else {
                             usersViewModel.signUpFirebaseUser(
                                 accountDto
