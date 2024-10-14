@@ -2,6 +2,7 @@ package io.github.junrdev.hiddengems.data.repo
 
 import com.google.firebase.auth.FirebaseUser
 import io.github.junrdev.hiddengems.data.model.AccountDto
+import io.github.junrdev.hiddengems.data.model.AppUser
 import io.github.junrdev.hiddengems.data.model.GithubUser
 import io.github.junrdev.hiddengems.data.model.UserAccount
 import io.github.junrdev.hiddengems.util.Resource
@@ -19,6 +20,16 @@ interface UsersRepo {
 
     suspend fun getGithubUserInfo(token: String): Result<GithubUser>
 
-    suspend fun getGithubUserDetails(uid : String, onResource: (Resource<GithubUser>) -> Unit)
+    suspend fun getUserDetails(
+        uid: String,
+        account: String,
+        onResource: (Resource<out AppUser>) -> Unit
+    )
 
+    fun toggleDefaultsInFirebase(
+        userId: String,
+        accountType: String,
+        rememberUser: Boolean,
+        locationSharing: Boolean
+    )
 }

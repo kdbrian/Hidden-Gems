@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.AccountDto
+import io.github.junrdev.hiddengems.data.model.AppUser
 import io.github.junrdev.hiddengems.data.model.GithubUser
 import io.github.junrdev.hiddengems.data.model.UserAccount
 import io.github.junrdev.hiddengems.data.repo.UsersRepo
 import io.github.junrdev.hiddengems.util.Resource
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,11 +33,6 @@ class UsersViewModel @Inject constructor(
         usersRepo.signUp(dto) { onResource(it) }
     }
 
-    fun getAllUsers() {
-        usersRepo.getAllUsers { _users.postValue(it) }
-    }
-
-
     suspend fun loginGithubUserWithCode(code: String): Resource<String> { //returns the token
         val tokenResult = usersRepo.getGithubUserTokenFromLoginCode(code)
         return when (tokenResult.isSuccess) {
@@ -49,12 +46,13 @@ class UsersViewModel @Inject constructor(
         }
     }
 
+
     suspend fun saveGithubUser(token: String, onResource: (Resource<String>) -> Unit) {
         //get user info from token
         val infoResult = usersRepo.getGithubUserInfo(token)
 
-        println("info $infoResult")
-        println("info ${infoResult.getOrNull()} err ${infoResult.exceptionOrNull()?.message}")
+        Timber.d("info res -> $infoResult")
+        Timber.d("info ${infoResult.getOrNull()} err ${infoResult.exceptionOrNull()?.message}")
 
         when (infoResult.isSuccess) {
             true -> {
@@ -70,9 +68,22 @@ class UsersViewModel @Inject constructor(
         }
     }
 
+    suspend fun loadUserDetails(
+        uid: String,
+        type: String,
+        onResource: (Resource<out AppUser>) -> Unit
+    ) {
+        usersRepo.getUserDetails(uid, type, onResource)
+    }
 
-    suspend fun loadGithubUserDetails(uid: String, onResource: (Resource<GithubUser>) -> Unit) {
-        usersRepo.getGithubUserDetails(uid, onResource)
+
+    fun toggleSetting(userId: String, type: String, remember: Boolean, location: Boolean) {
+        usersRepo.toggleDefaultsInFirebase(userId, type, remember, location)
+    }
+
+
+    fun getAllUsers() {
+        usersRepo.getAllUsers { _users.postValue(it) }
     }
 
 }

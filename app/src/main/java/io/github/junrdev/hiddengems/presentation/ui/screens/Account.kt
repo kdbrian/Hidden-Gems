@@ -15,26 +15,19 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
+import io.github.junrdev.hiddengems.data.model.GithubUser
+import io.github.junrdev.hiddengems.data.model.UserAccount
 import io.github.junrdev.hiddengems.databinding.FragmentAccountBinding
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
-import io.github.junrdev.hiddengems.presentation.ui.AppDatastore.Companion.FIREBASE_LOGIN
-import io.github.junrdev.hiddengems.presentation.ui.AppDatastore.Companion.GITHUB_LOGIN
-import io.github.junrdev.hiddengems.presentation.ui.AppDatastore.Companion.NO_LOGIN
 import io.github.junrdev.hiddengems.presentation.ui.showToast
 import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
+import io.github.junrdev.hiddengems.util.AccountMode
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import org.json.JSONObject
-import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,78 +63,99 @@ class Account : Fragment() {
 
                 println("mode $logginMode")
 
-                if (logginMode == GITHUB_LOGIN) {
-                    //fetch user profile from firebase
-                    textView38.visibility = View.GONE
-                    val userId = appDatastore.userId.first().orEmpty()
-                    CoroutineScope(Dispatchers.Main).launch {
-                        if (userId.isNotEmpty()) {
-                            usersViewModel.loadGithubUserDetails(userId) { userResource ->
-                                when (userResource) {
-                                    is Resource.Error -> {
-                                        loadingProfile.stopShimmer()
-                                        requireContext().showToast("failed to load account ${userResource.message}")
+                val userId = appDatastore.userId.first().orEmpty()
+                val accountMode = appDatastore.logginMode.first()
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (userId.isNotEmpty()) {
+                        usersViewModel.loadUserDetails(userId, accountMode) { userResource ->
+                            when (userResource) {
+                                is Resource.Error -> {
+                                    loadingProfile.stopShimmer()
+                                    requireContext().showToast("failed to load account ${userResource.message}")
+                                }
+
+                                is Resource.Loading -> {
+                                    loadingProfile.apply {
+                                        visibility = View.VISIBLE; startShimmer()
                                     }
+                                    profileGroup.visibility = View.GONE
+                                }
 
-                                    is Resource.Loading -> {
-                                        loadingProfile.apply {
-                                            visibility = View.VISIBLE; startShimmer()
-                                        }
-                                        profileGroup.visibility = View.GONE
-                                    }
+                                is Resource.Success -> {
+                                    CoroutineScope(Dispatchers.Main).launch {
 
-                                    is Resource.Success -> {
+                                        val appUser = userResource.data
 
-                                        val ghubUser = userResource.data!!
-                                        println("guser $ghubUser")
-                                        Glide.with(requireContext()).load(ghubUser.avatarUrl)
-                                            .centerCrop().into(profilePic)
-                                        textView31.text = "user#${ghubUser.id}"
-                                        textView32.text = ghubUser.username
-
+                                        delay(200)
                                         loadingProfile.apply {
                                             stopShimmer()
                                             visibility = View.GONE;
                                         }
                                         profileGroup.visibility = View.VISIBLE
+                                        textView38.visibility = View.GONE
 
+                                        appUser?.let {
+                                            when (it) {
+                                                //load account type
+                                                is GithubUser -> {
+                                                    val ghubUser = it
+                                                    println("guser $ghubUser")
+                                                    Glide.with(requireContext())
+                                                        .load(ghubUser.avatarUrl)
+                                                        .centerCrop().into(profilePic)
+
+                                                    textView31.text = "user#${ghubUser.id}"
+                                                    textView32.text = ghubUser.username
+                                                    println("github user")
+                                                }
+
+                                                is UserAccount -> {
+                                                    appDatastore.refreshVerificationDetails()
+                                                    textView38.isChecked =
+                                                        appDatastore.isEmailVerified.first()
+
+                                                    if (appDatastore.isEmailVerified.first()) {
+                                                        textView38.isEnabled = false
+                                                    } else
+                                                        textView38.setOnCheckedChangeListener { _, checked ->
+                                                            if (checked) {
+                                                                textView38.isChecked = false
+                                                                auth.currentUser!!.sendEmailVerification()
+                                                                    .addOnSuccessListener {
+                                                                        requireContext().showToast(
+                                                                            "check your mailbox to verify email."
+                                                                        ); return@addOnSuccessListener
+                                                                    }
+                                                                    .addOnFailureListener {
+                                                                        requireContext().showToast(
+                                                                            "Failed to send email due to ${it.message}"
+                                                                        ); return@addOnFailureListener
+                                                                    }
+                                                            } else
+                                                                return@setOnCheckedChangeListener
+                                                        }
+
+                                                    profileGroup.visibility = View.VISIBLE
+                                                    textView31.text =
+                                                        "user#${
+                                                            appDatastore.userId.first().toString()
+                                                                .substring(0, 5)
+                                                        }"
+                                                    textView32.text = appDatastore.userEmail.first()
+                                                }
+                                            }
+                                        }
                                     }
+
                                 }
 
                             }
                         }
                     }
+                }
 
-                } else if (logginMode == FIREBASE_LOGIN) {
-                    //read details from datastore
-                    delay(200)
-                    loadingProfile.apply {
-                        stopShimmer()
-                        visibility = View.GONE;
-                    }
-
-                    appDatastore.refreshVerificationDetails()
-                    textView38.isChecked = appDatastore.isEmailVerified.first()
-
-                    if (appDatastore.isEmailVerified.first()) {
-                        textView38.isEnabled = false
-                    } else
-                        textView38.setOnCheckedChangeListener { _, checked ->
-                            if (checked) {
-                                textView38.isChecked = false
-                                auth.currentUser!!.sendEmailVerification()
-                                    .addOnSuccessListener { requireContext().showToast("check your mailbox to verify email."); return@addOnSuccessListener }
-                                    .addOnFailureListener { requireContext().showToast("Failed to send email due to ${it.message}"); return@addOnFailureListener }
-                            } else
-                                return@setOnCheckedChangeListener
-                        }
-
-                    profileGroup.visibility = View.VISIBLE
-                    textView31.text =
-                        "user#${appDatastore.userId.first().toString().substring(0, 5)}"
-                    textView32.text = appDatastore.userEmail.first()
-
-                } else if (logginMode == NO_LOGIN) {
+                if (logginMode == AccountMode.NO_LOGIN.mode) {
                     //TODO: consider this case
                     loadingProfile.stopShimmer()
                 }
@@ -151,6 +165,7 @@ class Account : Fragment() {
                 textView33.setOnCheckedChangeListener { _, checked ->
                     CoroutineScope(Dispatchers.Main).launch {
                         appDatastore.toggleLocation(checked)
+                        updateProfileSettings()
                     }
                 }
 
@@ -159,6 +174,7 @@ class Account : Fragment() {
                 textView34.setOnCheckedChangeListener { _, checked ->
                     CoroutineScope(Dispatchers.Main).launch {
                         appDatastore.toggleRememberMe(checked)
+                        updateProfileSettings()
                     }
                 }
 
@@ -181,38 +197,19 @@ class Account : Fragment() {
         }
     }
 
-
-    //TODO:move this to users repo call via model -> abstraction maintained
-    private fun fetchGitHubUserProfile(accessToken: String) {
-        val request = Request.Builder().url("https://api.github.com/user")
-            .header("Authorization", "Bearer $accessToken").build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                // Handle failure
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val userData = response.body?.string()
-                userData?.let {
-                    val json = JSONObject(it)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        binding.apply {
-
-                            Glide.with(requireContext()).load(json.getString("avatar_url"))
-                                .centerCrop().into(profilePic)
-
-                            textView31.text = "user#${json.getString("id")}"
-                            textView32.text = json.getString("login")
-
-                        }
-
-
-                    }
-                }
-            }
-        })
+    private fun updateProfileSettings() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val mode = appDatastore.logginMode.first()
+            val uid = appDatastore.userId.first()
+            val loc = appDatastore.locationSharing.first()
+            val rem = appDatastore.rememberUser.first()
+            usersViewModel.toggleSetting(
+                userId = uid!!,
+                type = mode,
+                location = loc,
+                remember = rem
+            )
+        }
     }
 
 
