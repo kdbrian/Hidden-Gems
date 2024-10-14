@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.auth.FirebaseAuth
+import io.github.junrdev.hiddengems.util.AccountMode
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -41,7 +42,7 @@ class AppDatastore @Inject constructor(
             prefs[_userEmail] = user.email.toString()
             prefs[_isEmailVerified] = user.isEmailVerified
             prefs[_isLoggedIn] = true
-            prefs[_logginMode] = FIREBASE_LOGIN
+            prefs[_logginMode] = AccountMode.FIREBASE_LOGIN.mode
         }
     }
 
@@ -67,7 +68,7 @@ class AppDatastore @Inject constructor(
         context.datastore.edit { prefs ->
             prefs[_gHubToken] = token
             prefs[_userId] = userId
-            prefs[_logginMode] = GITHUB_LOGIN
+            prefs[_logginMode] = AccountMode.GITHUB_LOGIN.mode
             prefs[_isLoggedIn] = true
         }
     }
@@ -117,16 +118,11 @@ class AppDatastore @Inject constructor(
     }
 
     val logginMode = context.datastore.data.map { prefs ->
-        prefs[_logginMode] ?: NO_LOGIN
+        prefs[_logginMode] ?: AccountMode.NO_LOGIN.mode
     }
 
 
     companion object {
-
-        const val GITHUB_LOGIN = "GITHUB_LOGIN"
-        const val FIREBASE_LOGIN = "FIREBASE_LOGIN"
-        const val NO_LOGIN = "NO_LOGIN"
-
 
         val keys = listOf(
             "isLoggedIn",
