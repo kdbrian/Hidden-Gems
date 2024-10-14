@@ -10,8 +10,14 @@ data class UserAccount(
     val uid: String,
     val email: String,
     val dateJoined: String = LocalDateTime.now().toString(),
-    val createdBy: String? = AppDatastore.FIREBASE_LOGIN
-) : Parcelable
+    val createdBy: String? = AppDatastore.FIREBASE_LOGIN,
+) : Parcelable, AppUser()
+
+//default app user
+open class AppUser(
+    val rememberMe: Boolean = false,
+    val locationSharing: Boolean = false,
+)
 
 @Parcelize
 data class AccountDto(
@@ -29,4 +35,4 @@ data class GithubUser(
     val followers: String? = null,
     val avatarUrl: String? = null,
     val createdBy: String? = AppDatastore.GITHUB_LOGIN
-) : Parcelable
+) : Parcelable, AppUser()
