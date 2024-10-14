@@ -74,18 +74,21 @@ class HomeScreen : Fragment() {
                         }
 
                         is Resource.Success -> {
+                            loadingTopPicks.stopShimmer()
                             val places = gemsResource.data
                             println("data $places")
                             places?.let {
-                                loadingTopPicks.apply { stopShimmer(); visibility = View.GONE }
-                                topPicks.apply {
-                                    visibility = View.VISIBLE
+                                if (places.isNotEmpty()) {
+                                    loadingTopPicks.visibility = View.GONE
+                                    topPicks.apply {
+                                        visibility = View.VISIBLE
 
-                                    adapter = PlaceListAdapter(requireContext(), places) {
-                                        findNavController().navigate(
-                                            R.id.action_homeScreen_to_viewGem,
-                                            bundleOf(Constant.gem to it)
-                                        )
+                                        adapter = PlaceListAdapter(requireContext(), places) {
+                                            findNavController().navigate(
+                                                R.id.action_homeScreen_to_viewGem,
+                                                bundleOf(Constant.gem to it)
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -164,7 +167,9 @@ class HomeScreen : Fragment() {
                 findNavController().navigate(R.id.action_homeScreen_to_viewGem)
             }
 
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         runBlocking {
                             requireActivity().finish()

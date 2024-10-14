@@ -18,7 +18,7 @@ class GemsRepoImpl @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
 ) : GemsRepo {
 
-    private val gems = firestore.collection("gems-snap1")
+    private val gems = firestore.collection(Constant.gemscollection)
 
     override fun getGems(onResource: (Resource<List<Gem>>) -> Unit) {
         onResource(Resource.Loading())

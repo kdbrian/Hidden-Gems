@@ -230,6 +230,35 @@
                 app:trackTint="@color/richBlack" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:src="@drawable/markdown"
+                app:tint="@color/chillRed" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:drawableTint="@color/richBlack"
+                android:fontFamily="@font/questrialregular"
+                android:text="ReadMe Project"
+                android:textColor="@color/aliceBlue"
+                android:textSize="18sp"
+                app:thumbTint="@color/chillRed"
+                app:trackTint="@color/richBlack" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/textView35"
             android:layout_width="match_parent"
