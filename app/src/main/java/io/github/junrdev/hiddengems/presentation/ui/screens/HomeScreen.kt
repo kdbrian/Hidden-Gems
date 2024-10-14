@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
@@ -150,15 +152,25 @@ class HomeScreen : Fragment() {
 
             addGem.setOnClickListener {
                 CoroutineScope(Dispatchers.Main).launch {
-                    if (appDatastore.isEmailVerified.first()){
+                    if (appDatastore.isEmailVerified.first()) {
                         findNavController().navigate(R.id.action_homeScreen_to_addGem)
-                    }else
+                    } else
                         requireContext().showToast("Ooops\uD83D\uDE1F\uD83D\uDE1F, verify email first.")
                 }
             }
+
+
             textView2.setOnClickListener {
                 findNavController().navigate(R.id.action_homeScreen_to_viewGem)
             }
+
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        runBlocking {
+                            requireActivity().finish()
+                        }
+                    }
+                })
 
         }
     }

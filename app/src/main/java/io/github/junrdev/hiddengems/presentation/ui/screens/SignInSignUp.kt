@@ -23,6 +23,7 @@ import io.github.junrdev.hiddengems.presentation.viewmodel.UsersViewModel
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,34 +50,7 @@ class SignInSignUp : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-
             //github login
-            imageView5.setOnClickListener {
-                initiateGithubLogin()
-            }
-
-            val loading = LoadingDialog.newInstance("Attempting loggin please wait..")
-
-            usersViewModel.loggedInState.observe(viewLifecycleOwner){logginResource ->
-                when(logginResource){
-                    is Resource.Error -> {
-                        if(loading.isVisible)
-                            loading.dismiss()
-                        requireContext().showToast(logginResource.message.toString())
-                    }
-                    is Resource.Loading -> {
-                        loading.show(parentFragmentManager, null)
-                    }
-                    is Resource.Success -> {
-                        loading.dismiss()
-                        findNavController().navigate(R.id.action_signInSignUp_to_homeScreen)
-                        findNavController().popBackStack(
-                            R.id.action_signInSignUp_to_homeScreen,
-                            true
-                        )
-                    }
-                }
-            }
 
             button2.setOnClickListener {
                 if (checkFields()) {
@@ -161,17 +135,6 @@ class SignInSignUp : Fragment() {
             }
 
         }
-    }
-
-
-    private fun initiateGithubLogin() {
-        val clientId = BuildConfig.clientID
-
-        val aouthurl =
-            "https://github.com/login/oauth/authorize?client_id=$clientId&scope=read:user,user:email" +
-                    "&redirect_uri=hiddengems://hiddengemsghub0auth"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(aouthurl))
-        startActivity(intent)
     }
 
     private fun FragmentSignInSignUpBinding.checkFields(): Boolean {
