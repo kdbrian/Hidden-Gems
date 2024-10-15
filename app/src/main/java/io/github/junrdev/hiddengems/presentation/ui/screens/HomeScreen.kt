@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -54,9 +56,10 @@ class HomeScreen : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.apply {
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
-            goToProfile.setOnClickListener { findNavController().navigate(R.id.action_homeScreen_to_account2) }
+        binding.apply {
 
             CoroutineScope(Dispatchers.Main).launch {
 
@@ -115,14 +118,15 @@ class HomeScreen : Fragment() {
                             loadingServings.stopShimmer()
 
                             servingsResource.data?.let { servingList ->
-                                if (servingList.isNotEmpty()){
+                                if (servingList.isNotEmpty()) {
                                     loadingServings.visibility = View.GONE
-                                    servings.adapter = ServingListAdapter(servingList.toMutableList()) {
-                                        findNavController().navigate(
-                                            R.id.action_homeScreen_to_searchResults,
-                                            bundleOf(Constant.serving to it)
-                                        )
-                                    }
+                                    servings.adapter =
+                                        ServingListAdapter(servingList.toMutableList()) {
+                                            findNavController().navigate(
+                                                R.id.action_homeScreen_to_searchResults,
+                                                bundleOf(Constant.serving to it)
+                                            )
+                                        }
                                     servings.visibility = View.VISIBLE
                                 }
                             }
@@ -136,22 +140,6 @@ class HomeScreen : Fragment() {
                     servingsViewModel.getServings()
                 }
             }
-
-            editTextText.apply {
-                imeOptions = EditorInfo.IME_ACTION_SEARCH
-
-                setOnEditorActionListener { _, actionId, _ ->
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        findNavController().navigate(
-                            R.id.action_homeScreen_to_searchResults,
-                            bundleOf("name" to text.toString())
-                        )
-                        true
-                    }
-                    false
-                }
-            }
-
 
             addGem.setOnClickListener {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -178,12 +166,27 @@ class HomeScreen : Fragment() {
                 })
 
         }
+
+
     }
 
-    @Suppress("DEPRECATION")
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.accounttoolbarmenu, menu)
+        val search = menu.findItem(R.id.action_search)
+        (search.actionView as SearchView).setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return query?.let {
+                    true
+                } ?: false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
         super.onCreateOptionsMenu(menu, inflater)
     }
 

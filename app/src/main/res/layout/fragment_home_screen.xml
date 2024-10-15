@@ -4,65 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/richBlack"
     tools:context=".presentation.ui.screens.HomeScreen">
 
-    <ScrollView
-        android:id="@+id/mainContent"
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- CollapsingToolbarLayout to wrap the Toolbar -->
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="@color/richBlack"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="34dp"
+            app:expandedTitleTextColor="@color/white"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="Hidden Gems Near You">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hiddeng1"
+                    app:layout_collapseMode="parallax" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.6"
+                    android:background="@drawable/fadinggradient"
+                    android:backgroundTint="@color/black"
+                    android:orientation="vertical"
+                    />
+
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:menu="@menu/accounttoolbarmenu"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/richBlack"
-        android:scrollbars="none"
-        tools:context=".presentation.ui.screens.HomeScreen">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:elevation="14dp"
-                android:overScrollMode="ifContentScrolls"
-                android:padding="24dp">
-
-                <TextView
-                    android:id="@+id/someQuote"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:elevation="14dp"
-                    android:text="Hard"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/goToProfile"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0"
-                    android:src="@drawable/round_account_circle_24" />
-
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/editTextText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/roundbox"
-                android:drawableStart="@drawable/round_search_24"
-                android:drawablePadding="12dp"
-                android:drawableTint="@color/chillRed"
-                android:ems="10"
-                android:hint="place name"
-                android:inputType="text"
-                android:padding="16dp"
-                android:textColor="@color/davysGrey"
-                android:textColorHint="@color/davysGrey" />
 
             <LinearLayout
                 android:id="@+id/addGem"
@@ -212,7 +218,8 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </ScrollView>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

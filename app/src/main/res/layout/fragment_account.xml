@@ -166,6 +166,7 @@
             android:drawableTint="@color/richBlack"
             android:padding="32dp"
             android:text="Verify email"
+            app:thumbIcon="@drawable/logo_transparent_png"
             android:textColor="@color/aliceBlue"
             android:textSize="18sp"
             app:thumbTint="@color/chillRed"

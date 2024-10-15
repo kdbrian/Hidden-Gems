@@ -19,7 +19,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.junrdev.hiddengems.R
 import io.github.junrdev.hiddengems.data.model.GemDto
@@ -27,6 +26,7 @@ import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.databinding.FragmentAddGemBinding
 import io.github.junrdev.hiddengems.presentation.adapter.AddGemImagesAdapter
 import io.github.junrdev.hiddengems.presentation.adapter.ServingListAdapter
+import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
 import io.github.junrdev.hiddengems.presentation.ui.LoadingDialog
 import io.github.junrdev.hiddengems.presentation.ui.getAdress
 import io.github.junrdev.hiddengems.presentation.ui.showToast
@@ -35,6 +35,10 @@ import io.github.junrdev.hiddengems.presentation.viewmodel.GemsViewModel
 import io.github.junrdev.hiddengems.presentation.viewmodel.ServingsViewModel
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,7 +53,8 @@ class AddGem : Fragment() {
     private lateinit var addedservingsadapter: ServingListAdapter
 
     @Inject
-    lateinit var auth: FirebaseAuth
+    lateinit var appDatastore: AppDatastore
+
 
     private val gemsViewModel by viewModels<GemsViewModel>()
     private val servingsViewModel by viewModels<ServingsViewModel>()
@@ -258,44 +263,52 @@ class AddGem : Fragment() {
                     println("prefsize ${prefilledIds.size}")
                     println("prefs $prefilledIds")
                     println("all $allgemsservings")
-                    println("prefsmapped ${prefilledIds.map { allgemsservings[it].id}}")
+                    println("prefsmapped ${prefilledIds.map { allgemsservings[it].id }}")
 
                     servingsIds.addAll(prefilledIds.map { allgemsservings[it].id.toString() })
                     servings.addAll(prefilledIds.map { allgemsservings[it] })
                 }
 
-//                return@setOnClickListener
 
                 val dialog = LoadingDialog.newInstance("saving gem.")
+
+
                 if (checkFields()) {
-                    val gem = GemDto(
-                        placeName = editTextText2.text.toString(),
-                        gemId = null,
-                        offerings = servingsIds.toList(),
-                        servings = servings,
-                        images = images.toList(),
-                        addedBy = auth.currentUser!!.uid,
-                        latLng = latLng?.toStringJson(),
-                        locationName = editTextText3.text.toString()
-                    )
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val uid = appDatastore.userId.first()
+                        uid?.let { userId ->
 
-                    gemsViewModel.addGem(gem) { booleanResource ->
-                        when (booleanResource) {
-                            is Resource.Error -> {
-                                dialog.dismiss()
-                                requireContext().showToast(booleanResource.message.toString())
-                            }
+                            val gem = GemDto(
+                                placeName = editTextText2.text.toString(),
+                                gemId = null,
+                                offerings = servingsIds.toList(),
+                                servings = servings,
+                                images = images.toList(),
+                                addedBy = userId,
+                                latLng = latLng?.toStringJson(),
+                                locationName = editTextText3.text.toString()
+                            )
 
-                            is Resource.Loading -> {
-                                dialog.show(parentFragmentManager, null)
-                            }
+                            gemsViewModel.addGem(gem) { booleanResource ->
+                                when (booleanResource) {
+                                    is Resource.Error -> {
+                                        dialog.dismiss()
+                                        requireContext().showToast(booleanResource.message.toString())
+                                    }
 
-                            is Resource.Success -> {
-                                dialog.dismiss()
-                                findNavController().navigateUp()
+                                    is Resource.Loading -> {
+                                        dialog.show(parentFragmentManager, null)
+                                    }
+
+                                    is Resource.Success -> {
+                                        dialog.dismiss()
+                                        findNavController().navigateUp()
+                                    }
+                                }
                             }
-                        }
+                        }?:requireContext().showToast("Something unexpected happened.")
                     }
+
                 }
             }
 
