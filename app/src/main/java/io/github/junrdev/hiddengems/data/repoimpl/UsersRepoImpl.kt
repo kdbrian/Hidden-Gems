@@ -1,4 +1,4 @@
-package io.github.junrdev.hiddengems.domain.repoimpl
+package io.github.junrdev.hiddengems.data.repoimpl
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -9,7 +9,7 @@ import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.data.model.AppUser
 import io.github.junrdev.hiddengems.data.model.GithubUserAccount
 import io.github.junrdev.hiddengems.data.model.FirebaseUserAccount
-import io.github.junrdev.hiddengems.data.repo.UsersRepo
+import io.github.junrdev.hiddengems.domain.repo.UsersRepo
 import io.github.junrdev.hiddengems.util.AccountMode
 import io.github.junrdev.hiddengems.util.AccountMode.Companion.toMode
 import io.github.junrdev.hiddengems.util.Constant

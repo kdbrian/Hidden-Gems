@@ -1,4 +1,4 @@
-package io.github.junrdev.hiddengems.data.repo
+package io.github.junrdev.hiddengems.domain.repo
 
 import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.util.Resource

@@ -131,6 +131,8 @@ dependencies {
     implementation(libs.timber)
 
 
+    //gen ai
+    implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
 
 }
 

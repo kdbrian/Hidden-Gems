@@ -10,14 +10,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.junrdev.hiddengems.data.local.HiddenGemDb
-import io.github.junrdev.hiddengems.data.repo.GemsRepo
-import io.github.junrdev.hiddengems.data.repo.ReviewsRepo
-import io.github.junrdev.hiddengems.data.repo.ServingRepo
-import io.github.junrdev.hiddengems.data.repo.UsersRepo
-import io.github.junrdev.hiddengems.domain.repoimpl.GemsRepoImpl
-import io.github.junrdev.hiddengems.domain.repoimpl.ReviewsRepoImpl
-import io.github.junrdev.hiddengems.domain.repoimpl.ServingRepoImpl
-import io.github.junrdev.hiddengems.domain.repoimpl.UsersRepoImpl
+import io.github.junrdev.hiddengems.data.repoimpl.GeminiRepoImpl
+import io.github.junrdev.hiddengems.data.repoimpl.GemsRepoImpl
+import io.github.junrdev.hiddengems.data.repoimpl.ReviewsRepoImpl
+import io.github.junrdev.hiddengems.data.repoimpl.ServingRepoImpl
+import io.github.junrdev.hiddengems.data.repoimpl.UsersRepoImpl
+import io.github.junrdev.hiddengems.domain.repo.GeminiRepo
+import io.github.junrdev.hiddengems.domain.repo.GemsRepo
+import io.github.junrdev.hiddengems.domain.repo.ReviewsRepo
+import io.github.junrdev.hiddengems.domain.repo.ServingRepo
+import io.github.junrdev.hiddengems.domain.repo.UsersRepo
 import io.github.junrdev.hiddengems.presentation.ui.AppDatastore
 import javax.inject.Singleton
 
@@ -93,6 +95,14 @@ object AppModule {
     fun providesAppDatastore(context: Context, firebaseAuth: FirebaseAuth): AppDatastore {
         return AppDatastore(context, firebaseAuth)
     }
+
+
+    @Provides
+    @Singleton
+    fun providesGeminiRepo(): GeminiRepo {
+        return GeminiRepoImpl()
+    }
+
 
 
 }

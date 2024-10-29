@@ -1,8 +1,8 @@
-package io.github.junrdev.hiddengems.domain.repoimpl
+package io.github.junrdev.hiddengems.data.repoimpl
 
 import com.google.firebase.firestore.FirebaseFirestore
 import io.github.junrdev.hiddengems.data.model.Serving
-import io.github.junrdev.hiddengems.data.repo.ServingRepo
+import io.github.junrdev.hiddengems.domain.repo.ServingRepo
 import io.github.junrdev.hiddengems.util.Constant
 import io.github.junrdev.hiddengems.util.Resource
 

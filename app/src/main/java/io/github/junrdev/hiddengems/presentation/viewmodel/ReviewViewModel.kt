@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.Review
-import io.github.junrdev.hiddengems.data.repo.ReviewsRepo
+import io.github.junrdev.hiddengems.domain.repo.ReviewsRepo
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.launch
 import javax.inject.Inject

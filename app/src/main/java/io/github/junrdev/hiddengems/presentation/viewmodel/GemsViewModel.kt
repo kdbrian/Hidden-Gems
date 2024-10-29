@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.Gem
 import io.github.junrdev.hiddengems.data.model.GemDto
 import io.github.junrdev.hiddengems.data.model.Serving
-import io.github.junrdev.hiddengems.data.repo.GemsRepo
+import io.github.junrdev.hiddengems.domain.repo.GemsRepo
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.launch
 import javax.inject.Inject

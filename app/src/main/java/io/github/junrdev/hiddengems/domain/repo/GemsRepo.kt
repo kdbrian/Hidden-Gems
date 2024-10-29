@@ -1,4 +1,4 @@
-package io.github.junrdev.hiddengems.data.repo
+package io.github.junrdev.hiddengems.domain.repo
 
 import android.net.Uri
 import io.github.junrdev.hiddengems.data.model.Gem

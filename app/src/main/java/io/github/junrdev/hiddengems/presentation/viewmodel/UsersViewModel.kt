@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.data.model.AppUser
 import io.github.junrdev.hiddengems.data.model.FirebaseUserAccount
-import io.github.junrdev.hiddengems.data.repo.UsersRepo
+import io.github.junrdev.hiddengems.domain.repo.UsersRepo
 import io.github.junrdev.hiddengems.util.Resource
 import timber.log.Timber
 import javax.inject.Inject
