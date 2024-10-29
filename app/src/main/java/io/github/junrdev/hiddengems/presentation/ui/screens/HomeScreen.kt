@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -99,7 +98,6 @@ class HomeScreen : Fragment() {
                         }
                     }
                 }
-
                 servingsViewModel.servings.observe(viewLifecycleOwner) { servingsResource ->
                     when (servingsResource) {
                         is Resource.Error -> {
