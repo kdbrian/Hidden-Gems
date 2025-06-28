@@ -1,76 +1,43 @@
 [versions]
-agp = "8.6.0"
-browser = "1.8.0"
-circleimageview = "3.1.0"
-datastorePreferences = "1.1.1"
-firebaseBom = "33.4.0"
-glide = "4.16.0"
-gson = "2.11.0"
-hiltAndroidCompiler = "2.51.1"
-kotlin = "2.0.0"
-coreKtx = "1.13.1"
+agp = "8.10.1"
+kotlin = "2.0.21"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-appcompat = "1.7.0"
-lottie = "6.5.2"
-material = "1.12.0"
-activity = "1.9.2"
-constraintlayout = "2.1.4"
+lifecycleRuntimeKtx = "2.9.1"
+activityCompose = "1.10.1"
+composeBom = "2024.09.00"
+firebaseCrashlytics = "19.4.4"
 googleGmsGoogleServices = "4.4.2"
-firebaseAuth = "23.0.0"
-firebaseFirestore = "25.1.0"
-googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
-okhttp = "4.12.0"
-playServicesLocation = "21.3.0"
-playServicesMaps = "19.0.0"
-navigationFragment = "2.8.2"
-firebaseStorage = "21.0.1"
-playServicesMapsVersion = "19.0.0"
-protobufJavalite = "3.25.1"
-roomKtx = "2.6.1"
-shimmer = "0.5.0"
-swiperefreshlayout = "1.1.0"
-timber = "5.0.1"
+googleFirebaseCrashlytics = "3.0.4"
+firebaseFirestore = "25.1.4"
+firebaseMessaging = "24.1.1"
+firebaseAnalytics = "22.4.0"
 
 [libraries]
-androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
-androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationFragment" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
-androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
-androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
-circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
-firebase-auth = { module = "com.google.firebase:firebase-auth" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidCompiler" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
-play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
-androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
-firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
-play-services-maps-v1810 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
-protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavalite" }
-shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
-google-android-libraries-mapsplatform-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
