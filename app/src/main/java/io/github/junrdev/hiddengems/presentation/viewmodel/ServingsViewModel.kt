@@ -4,15 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.Serving
 import io.github.junrdev.hiddengems.domain.repo.ServingRepo
 import io.github.junrdev.hiddengems.util.Resource
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ServingsViewModel @Inject constructor(
+
+class ServingsViewModel constructor(
     private val servingRepo: ServingRepo
 ) : ViewModel() {
 
