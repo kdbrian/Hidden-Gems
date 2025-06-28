@@ -6,6 +6,7 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.cache.DiskCache
 import timber.log.Timber
+import io.github.junrdev.hiddengems.BuildConfig
 
 class HiddenGemsApp : Application(){
     override fun onCreate() {
