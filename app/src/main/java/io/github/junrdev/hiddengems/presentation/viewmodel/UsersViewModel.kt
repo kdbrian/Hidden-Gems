@@ -4,17 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
-import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.junrdev.hiddengems.data.model.AccountDto
 import io.github.junrdev.hiddengems.data.model.AppUser
 import io.github.junrdev.hiddengems.data.model.FirebaseUserAccount
 import io.github.junrdev.hiddengems.domain.repo.UsersRepo
 import io.github.junrdev.hiddengems.util.Resource
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class UsersViewModel @Inject constructor(
+
+class UsersViewModel constructor(
     private val usersRepo: UsersRepo
 ) : ViewModel() {
 
